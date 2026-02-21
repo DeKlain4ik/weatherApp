@@ -102,87 +102,114 @@ class MainWindow(widgets.QMainWindow):
         self.SCROLL_AREA = ScrollArea(parent = self.LEFT_AREA)
      
      
-        # self.LEFT_AREA_LAYOUT.addWidget(self.THEME_BUTTON)
-
         self.LEFT_AREA_LAYOUT.addWidget(self.SCROLL_AREA)
 
         self.CONTENT_FRAME_LAYOUT.addWidget(self.LEFT_AREA)
-        
 
+        self.cards_list = []
+        
         for cards in range(10):
-            card = Cards_widget(parent = self.SCROLL_AREA, city_name="Дніпро", time="12:00",weather="Переважно хмарно", temp="25", max_temp = "30", min_temp = "20", is_first=(cards == 0))
-            self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(card)
+ 
+            self.card = Cards_widget(parent = self.SCROLL_AREA, 
+                                id = cards,
+                                city_name="Dnipro", 
+                                time=None,
+                                weather="Переважно хмарно", 
+                                temp="25", max_temp = "30", 
+                                min_temp = "20", 
+                                dark=self.DARK,
+                                is_first=(cards == 0))
+            
+            self.card.frame_clicked.connect(self.clicked)
+            
+
+            self.cards_list.append(self.card)
+            
+            self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card)
 
         
         self.THEME_BUTTON.clicked.connect(self.switch_theme)
 
-
+        
     
-        # self.FRAME = widgets.QFrame(parent = self.CONTENT_FRAME)
-        # self.FRAME.setStyleSheet("background-color: red; ")
-        # self.FRAME.setFixedSize(788, 197)
+        self.FRAME = widgets.QFrame(parent = self.CONTENT_FRAME)
+        self.FRAME.setStyleSheet("background-color: red; ")
+        self.FRAME.setFixedSize(788, 197)
         
-        # self.FRAME_LAYOUT = widgets.QVBoxLayout()
-        # self.FRAME.setLayout(self.FRAME_LAYOUT)
+        self.FRAME_LAYOUT = widgets.QVBoxLayout()
+        self.FRAME.setLayout(self.FRAME_LAYOUT)
         
-        # self.CONTENT_FRAME_LAYOUT.addWidget(self.FRAME)
+        self.CONTENT_FRAME_LAYOUT.addWidget(self.FRAME)
         
-        # self.FRAME1 = widgets.QFrame(parent = self.FRAME)
-        # self.FRAME1.setStyleSheet("background-color: green; ")
-        # self.FRAME1.setFixedSize(730, 24)
+        self.FRAME1 = widgets.QFrame(parent = self.FRAME)
+        self.FRAME1.setStyleSheet("background-color: green; ")
+        self.FRAME1.setFixedSize(730, 24)
         
-        # self.FRAME1_LAYOUT = widgets.QHBoxLayout()
-        # self.FRAME1.setLayout(self.FRAME1_LAYOUT)
+        self.FRAME1_LAYOUT = widgets.QHBoxLayout()
+        self.FRAME1.setLayout(self.FRAME1_LAYOUT)
         
-        # self.FRAME_LAYOUT.addWidget(self.FRAME1)
+        self.FRAME_LAYOUT.addWidget(self.FRAME1)
         
-        # self.FRAME2 = widgets.QFrame(parent = self.FRAME)
-        # self.FRAME2.setStyleSheet("background-color: blue; ")
-        # self.FRAME2.setFixedWidth(730)
+        self.FRAME2 = widgets.QFrame(parent = self.FRAME)
+        self.FRAME2.setStyleSheet("background-color: blue; ")
+        self.FRAME2.setFixedWidth(730)
         
-        # self.FRAME2_LAYOUT = widgets.QHBoxLayout()
-        # self.FRAME2_LAYOUT.setContentsMargins(0, 0, 0, 0)
-        # self.FRAME2_LAYOUT.setSpacing(10)
-        # self.FRAME2_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignLeft)
-        # self.FRAME2.setLayout(self.FRAME2_LAYOUT)     
+        self.FRAME2_LAYOUT = widgets.QHBoxLayout()
+        self.FRAME2_LAYOUT.setContentsMargins(0, 0, 0, 0)
+        self.FRAME2_LAYOUT.setSpacing(10)
+        self.FRAME2_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignLeft)
+        self.FRAME2.setLayout(self.FRAME2_LAYOUT)     
         
-        # self.FRAME_LAYOUT.addWidget(self.FRAME2)
+        self.FRAME_LAYOUT.addWidget(self.FRAME2)
         
-        # self.TEMPERATURE_GRAPH_FRAME = widgets.QFrame(parent = self.FRAME2)
-        # self.TEMPERATURE_GRAPH_FRAME.setMaximumSize(727, 136)
+        self.TEMPERATURE_GRAPH_FRAME = widgets.QFrame(parent = self.FRAME2)
+        self.TEMPERATURE_GRAPH_FRAME.setMaximumSize(727, 136)
         
-        # self.TEMPERATURE_GRAPH_FRAME_LAYOUT = widgets.QHBoxLayout()
-        # self.TEMPERATURE_GRAPH_FRAME_LAYOUT.setContentsMargins(0, 0, 0, 0)
-        # self.TEMPERATURE_GRAPH_FRAME_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignBottom)
-        # self.TEMPERATURE_GRAPH_FRAME.setLayout(self.TEMPERATURE_GRAPH_FRAME_LAYOUT)
+        self.TEMPERATURE_GRAPH_FRAME_LAYOUT = widgets.QHBoxLayout()
+        self.TEMPERATURE_GRAPH_FRAME_LAYOUT.setContentsMargins(0, 0, 0, 0)
+        self.TEMPERATURE_GRAPH_FRAME_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignBottom)
+        self.TEMPERATURE_GRAPH_FRAME.setLayout(self.TEMPERATURE_GRAPH_FRAME_LAYOUT)
         
-        # self.FRAME2_LAYOUT.addWidget(self.TEMPERATURE_GRAPH_FRAME)
+        self.FRAME2_LAYOUT.addWidget(self.TEMPERATURE_GRAPH_FRAME)
         
-        # data_dict = api_request("Miami")
+        data_dict = api_request("Miami")
         
-        # for hour_data in data_dict["list"]:
-        #     temperature = int(hour_data["main"]["temp"])
+        
+        for hour_data in data_dict["list"]:
+            temperature = int(hour_data["main"]["temp"])
             
-        #     height = 0
+            height = 0
             
-        #     if temperature < 0 :
-        #         height = (temperature * -2)  + 30
-        #     elif temperature == 0:
-        #         height = 30
-        #     else:
-        #         height = temperature * 2 
+            if temperature < 0 :
+                height = (temperature * -2)  + 30
+            elif temperature == 0:
+                height = 30
+            else:
+                height = temperature * 2 
             
-        #     self.COLUMN = widgets.QFrame(self.TEMPERATURE_GRAPH_FRAME)
-        #     self.COLUMN.setFixedSize(core.QSize(8, height))
-        #     self.COLUMN.setStyleSheet("background-color: gray; ")
-        #     self.TEMPERATURE_GRAPH_FRAME_LAYOUT.addWidget(self.COLUMN, alignment = core.Qt.AlignmentFlag.AlignBottom)
+            self.COLUMN = widgets.QFrame(self.TEMPERATURE_GRAPH_FRAME)
+            self.COLUMN.setFixedSize(core.QSize(8, height))
+            self.COLUMN.setStyleSheet("background-color: gray; ")
+            self.TEMPERATURE_GRAPH_FRAME_LAYOUT.addWidget(self.COLUMN, alignment = core.Qt.AlignmentFlag.AlignBottom)
 
+    def clicked(self, clicked_frame):
+        for i in self.cards_list:
+             i.normalColor()
+
+        clicked_frame.clcikedColor()
+
+        
+
+
+         
     def switch_theme(self):
         self.DARK = not self.DARK
 
         if self.DARK:
             self.THEME_BUTTON.setIcon(gui.QIcon("media/SwitchDark.svg"))
+            self.LEFT_AREA.setStyleSheet("background-color: rgba(0, 0, 0, 46);")
         else:
-                self.THEME_BUTTON.setIcon(gui.QIcon("media/SwitchLight.svg"))
+            self.LEFT_AREA.setStyleSheet("background-color: rgba(255, 255, 255, 0.4);")
+            self.THEME_BUTTON.setIcon(gui.QIcon("media/SwitchLight.svg"))
 
 main_window = MainWindow(window_width = 1200, window_height = 800)

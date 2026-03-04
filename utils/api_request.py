@@ -1,5 +1,8 @@
+import os
+import sys
 import requests
 import json
+
 
 from config import API_KEY
 

@@ -9,5 +9,6 @@ def main():
         print(f"Помилка під час запуску проєкту: {error}")
 
 
+
 if __name__ == "__main__":
     main()

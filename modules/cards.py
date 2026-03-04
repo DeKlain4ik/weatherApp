@@ -120,8 +120,8 @@ class Cards_widget(widgets.QFrame):
           pressed_button = event.button()
           if pressed_button == core.Qt.MouseButton.LeftButton:
               self.clicked = not self.clicked
-              self.api_call()
               self.clcikedColor()
+              self.api_call()
               #оголошуємо сигнал
               self.frame_clicked.emit(self)
               

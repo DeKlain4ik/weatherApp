@@ -9,8 +9,9 @@ class ScrollArea(widgets.QScrollArea):
         super().__init__(parent)
 
         
-        self.setFixedWidth(370)
-        self.setFixedHeight(800)
+        self.setMinimumWidth(320)
+        self.setWidgetResizable(True)
+        
         self.setWidgetResizable(True)
 
         self.setFrameShape(widgets.QFrame.Shape.NoFrame)

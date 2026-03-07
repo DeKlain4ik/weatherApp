@@ -20,6 +20,7 @@ class MainWindow(widgets.QMainWindow):
         self.POSITION = None
 
         self.setWindowFlags(core.Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(core.Qt.WidgetAttribute.WA_TranslucentBackground)
         
         self.WINDOW_WIDTH = window_width
         self.WINDOW_HEIGHT = window_height
@@ -35,54 +36,76 @@ class MainWindow(widgets.QMainWindow):
         
         self.setGeometry(self.CENTER_X, self.CENTER_Y, self.WINDOW_WIDTH, self.WINDOW_HEIGHT)
 
-        self.BG_WIDGET = widgets.QWidget(parent = self)
-        self.BG_WIDGET.setFixedSize(core.QSize(self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
+        self.WINDOW_CONTAINER = widgets.QFrame()
+        self.setCentralWidget(self.WINDOW_CONTAINER)
+        self.WINDOW_CONTAINER.setObjectName("window_container")
 
-        self.BG_WIDGET.setStyleSheet("""
-                                        QWidget {
-                                            background: qlineargradient(
-                                                x1: 0, y1: 1, x2: 1, y2: 0, 
-                                                stop: 0 #87CEFA, 
-                                                stop: 1 #FFDF56
-                                            );
-                                     border-radius: 16px;
-                                            }
-                                          """)
+
+        self.WINDOW_CONTAINER.setStyleSheet("""
+        #window_container {
+            background: qlineargradient(
+                x1:0, y1:1, x2:1, y2:0,
+                stop:0 #5DADE2,
+                stop:1 #808080
+            );
+            border-radius:16px;
+        }
+        """)
         
         
         
-        self.CENTRAL_WIDGET = widgets.QWidget(parent = self)
-        self.CENTRAL_WIDGET.setFixedSize(core.QSize(self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
-        self.CENTRAL_WIDGET_LAYOUT = widgets.QVBoxLayout()
-        self.CENTRAL_WIDGET_LAYOUT.setContentsMargins(0, 0, 0, 0)
+        self.CENTRAL_WIDGET = widgets.QWidget()
+
+        self.CENTRAL_WIDGET_LAYOUT = widgets.QVBoxLayout(self.CENTRAL_WIDGET)
+        self.CENTRAL_WIDGET_LAYOUT.setContentsMargins(0,0,0,0)
         self.CENTRAL_WIDGET_LAYOUT.setSpacing(0)
         self.CENTRAL_WIDGET.setLayout(self.CENTRAL_WIDGET_LAYOUT)
 
         
+        container_layout = widgets.QVBoxLayout(self.WINDOW_CONTAINER)
+        container_layout.setContentsMargins(0,0,0,0)
+
+        container_layout.addWidget(self.CENTRAL_WIDGET)
+
+
 
 
         
         self.TITLE_BAR = Title_bar(self.CENTRAL_WIDGET, width = self.WINDOW_WIDTH)
         self.CENTRAL_WIDGET_LAYOUT.addWidget(self.TITLE_BAR)
         
-        self.CONTENT_FRAME = widgets.QFrame(self.CENTRAL_WIDGET)
-        self.CONTENT_FRAME_LAYOUT = widgets.QHBoxLayout()
-        self.CONTENT_FRAME_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignLeft)
-        self.CONTENT_FRAME.setLayout(self.CONTENT_FRAME_LAYOUT)
+        self.CONTENT_FRAME = widgets.QFrame()
+        self.CONTENT_FRAME_LAYOUT = widgets.QHBoxLayout(self.CONTENT_FRAME)
 
-        self.CONTENT_FRAME_LAYOUT.setContentsMargins(0, 0, 0, 0)
+        self.CONTENT_FRAME_LAYOUT.setContentsMargins(0,0,0,0)
         self.CONTENT_FRAME_LAYOUT.setSpacing(0)
-        
+
         self.CENTRAL_WIDGET_LAYOUT.addWidget(self.CONTENT_FRAME)
 
         self.LEFT_AREA = widgets.QFrame(parent=self.CONTENT_FRAME)
-        self.LEFT_AREA.setFixedSize(core.QSize(370,800))
-        self.LEFT_AREA.setStyleSheet("background-color: rgba(0, 0, 0, 46);")
+        self.LEFT_AREA.setMinimumWidth(320)
+        self.LEFT_AREA.setMaximumWidth(400)
+
         
-        self.RIGHT_AREA = widgets.QFrame(parent=self.CONTENT_FRAME)
+
+        self.LEFT_AREA.setSizePolicy(
+            widgets.QSizePolicy.Policy.Preferred,
+            widgets.QSizePolicy.Policy.Expanding
+        )
+
+        self.LEFT_AREA.setStyleSheet("background-color: rgba(0, 0, 0, 46);")
+
+        
+        
+        self.RIGHT_AREA = widgets.QFrame()
+
+        self.RIGHT_AREA.setSizePolicy(
+            widgets.QSizePolicy.Policy.Expanding,
+            widgets.QSizePolicy.Policy.Expanding
+        )
 
         self.FIRST_WIDGETS_LAYOUT = widgets.QHBoxLayout()
-        self.FIRST_WIDGETS_LAYOUT.setSpacing(20)
+        self.FIRST_WIDGETS_LAYOUT.setSpacing(10)
     
 
         self.WEATHER_FRAME = WeatherFrame(parent = self.RIGHT_AREA, weather=self.WEATHER, city = self.CITY, position=self.POSITION)
@@ -96,16 +119,18 @@ class MainWindow(widgets.QMainWindow):
 
         self.TIME_WEATHER_FRAME = widgets.QFrame(parent = self.RIGHT_AREA)
         self.TIME_WEATHER_FRAME.setStyleSheet("background-color: rgba(0, 0, 0, 46); border-radius: 16px")
-        self.TIME_WEATHER_FRAME.setFixedSize(core.QSize(788, 157))
+        # self.TIME_WEATHER_FRAME.setMinimumHeight(150)
+        self.TIME_WEATHER_FRAME.setFixedSize(790, 157)
         
         self.WEATHER_FOR_12_HOURS_FRAME = widgets.QFrame(parent = self.RIGHT_AREA)
         self.WEATHER_FOR_12_HOURS_FRAME.setStyleSheet("background-color: rgba(0, 0, 0, 46); border-radius: 16px")
-        self.WEATHER_FOR_12_HOURS_FRAME.setFixedSize(core.QSize(788, 197))
+        # self.WEATHER_FOR_12_HOURS_FRAME.setMinimumHeight(190)
+        self.WEATHER_FOR_12_HOURS_FRAME.setFixedSize(790, 197)
         
 
         self.LEFT_AREA_LAYOUT = widgets.QVBoxLayout()
         self.RIGHT_AREA_LAYOUT = widgets.QVBoxLayout()
-        self.RIGHT_AREA_LAYOUT.setContentsMargins(20, 40, 30, 20)
+        self.RIGHT_AREA_LAYOUT.setContentsMargins(10, 30, 20, 10)
         self.RIGHT_AREA_LAYOUT.setSpacing(10)
         self.RIGHT_AREA_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
 
@@ -137,36 +162,79 @@ class MainWindow(widgets.QMainWindow):
         self.LEFT_AREA_LAYOUT.addLayout(self.TOP_LAYOUT)
         
         self.SCROLL_AREA = ScrollArea(parent = self.LEFT_AREA)
+
+        
      
      
         self.LEFT_AREA_LAYOUT.addWidget(self.SCROLL_AREA)
 
-        self.CONTENT_FRAME_LAYOUT.addWidget(self.LEFT_AREA)
-        self.CONTENT_FRAME_LAYOUT.addWidget(self.RIGHT_AREA)
+        self.CONTENT_FRAME_LAYOUT.addWidget(self.LEFT_AREA, 0)
+        self.CONTENT_FRAME_LAYOUT.addWidget(self.RIGHT_AREA, 1)
         
 
         self.cards_list = []
         
-        for cards in range(10):
+        # for cards in range(10):
  
-            self.card = Cards_widget(parent = self.SCROLL_AREA, 
-                                id = cards,
-                                city_name="Dnipro", 
-                                time=None,
-                                weather="Переважно хмарно", 
-                                temp="25", max_temp = "30", 
-                                min_temp = "20",    
-                                is_first=(cards == 0))
+        #     self.card = Cards_widget(parent = self.SCROLL_AREA, 
+        #                         id = cards,
+        #                         city_name="Dnipro", 
+        #                         time=None,
+        #                         weather="Переважно хмарно", 
+        #                         temp="25", max_temp = "30", 
+        #                         min_temp = "20",    
+        #                         is_first=(cards == 0))
             
-            self.card.frame_clicked.connect(self.clicked)
+        #     self.card.frame_clicked.connect(self.clicked)
             
 
-            self.cards_list.append(self.card)
+        #     self.cards_list.append(self.card)
             
-            self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card)
+        #     self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card)
+
+        self.position = Cards_widget(parent=self.SCROLL_AREA,
+                                  id = 0,
+                                  city_name = "Ettlingen",
+                                  is_first = True)
+        
+        self.position.frame_clicked.connect(self.clicked)
+        self.cards_list.append(self.position)
+        self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.position)
+
+        self.clicked(self.position)
+        
+                
+        self.card2 = Cards_widget(parent=self.SCROLL_AREA,
+                                  id = 2,
+                                  city_name = "Ettlingen")
+        
+        self.card2.frame_clicked.connect(self.clicked)
+        self.cards_list.append(self.card2)
+        self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card2)
+
+        self.card3 = Cards_widget(parent=self.SCROLL_AREA,
+                                  id = 3,
+                                  city_name = "New York")
+        
+        self.card3.frame_clicked.connect(self.clicked)
+        self.cards_list.append(self.card3)
+        self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card3)
+
+        
+        self.card4 = Cards_widget(parent=self.SCROLL_AREA,
+                                  id = 4,
+                                  city_name = "Tokyo")
+        
+        self.card4.frame_clicked.connect(self.clicked)
+        self.cards_list.append(self.card4)
+        self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card4)
+
+        
 
         
         self.THEME_BUTTON.clicked.connect(self.switch_theme)
+
+        self.SCROLL_AREA.SCROLL_LAYOUT.addStretch()   
 
 
     
@@ -238,17 +306,35 @@ class MainWindow(widgets.QMainWindow):
 
         if clicked_frame.ID == 0:
             self.POSITION = "Поточна позицiя"
+            self.WEATHER_FRAME.CURENT_POSITON_CHECK = True
+            self.WEATHER_FRAME.curent_position()
         else:
+            self.WEATHER_FRAME.CURENT_POSITON_CHECK = False
+            self.WEATHER_FRAME.curent_position()
             self.POSITION = None
+
+        
         
         self.CITY = clicked_frame.CITY_NAME
-        self.WEATHER = clicked_frame.TEMP
+        self.WEATHER = f"{clicked_frame.TEMP}°"
+        self.DESCRIPTION = clicked_frame.weather_description
+        self.MAX_TEMP = clicked_frame.max_temp
+        self.MIN_TEMP = clicked_frame.min_temp
+
+        self.TIME_FRAME.CITY = self.CITY
+
+        data_dict = api_request(self.CITY)
+
+        icon_code = data_dict["list"][0]["weather"][0]["icon"]
 
 
         self.WEATHER_FRAME.set_text(position = self.POSITION,
                                     city = self.CITY,
                                     weather = self.WEATHER,
-                                    icon = "media/weather_icons/02d.svg"
+                                    icon=f"media/weather_icons/{icon_code}.svg",
+                                    description=self.DESCRIPTION,
+                                    max_temp = self.MAX_TEMP,
+                                    min_temp = self.MIN_TEMP                                
                                     )
 
         print(self.WEATHER)
@@ -261,9 +347,27 @@ class MainWindow(widgets.QMainWindow):
 
         if self.DARK:
             self.THEME_BUTTON.setIcon(gui.QIcon("media/SwitchDark.svg"))
-            self.LEFT_AREA.setStyleSheet("background-color: rgba(0, 0, 0, 46);")
+            self.WINDOW_CONTAINER.setStyleSheet("""
+                #window_container {
+                    background: qlineargradient(
+                        x1:0, y1:1, x2:1, y2:0,
+                        stop:0 #5DADE2,
+                        stop:1 #808080
+                    );
+                    border-radius:16px;
+                }
+                """)
         else:
-            self.LEFT_AREA.setStyleSheet("background-color: rgba(255, 255, 255, 0.4);")
+            self.WINDOW_CONTAINER.setStyleSheet("""
+            #window_container {
+                background: qlineargradient(
+                    x1:0, y1:1, x2:1, y2:0,
+                    stop:0 #87CEFA,
+                    stop:1 #FFDF56
+                );
+                border-radius:16px;
+            }
+            """)
             self.THEME_BUTTON.setIcon(gui.QIcon("media/SwitchLight.svg"))
 
 main_window = MainWindow(window_width = 1200, window_height = 800)

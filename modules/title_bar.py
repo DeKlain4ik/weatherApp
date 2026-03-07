@@ -14,7 +14,7 @@ class Title_bar(widgets.QFrame):
         
         self.setLayout(self.LAYOUT)
         
-        self.setFixedSize(core.QSize(width, 40))
+        self.setFixedHeight(40)
         self.setStyleSheet("background-color: rgba(0, 0, 0, 80); border-top-left-radius: 16px; border-top-right-radius: 16px;")
         
         self.BUTTONS_FRAME = widgets.QFrame(parent = self)
@@ -46,7 +46,8 @@ class Title_bar(widgets.QFrame):
         icon = gui.QIcon("media/title_bar/Maximize_Button.svg")
         self.MAX_BUTTON.setIcon(icon)
         self.MAX_BUTTON.setStyleSheet("border: none; ")
-        self.MAX_BUTTON.clicked.connect(self.WINDOW.showMaximized)
+
+        self.MAX_BUTTON.clicked.connect(self.toggle_maximize)
         
         self.BUTTONS_FRAME_LAYOUT.addWidget(self.CLOSE_BUTTON)
         self.BUTTONS_FRAME_LAYOUT.addWidget(self.MIN_BUTTON)
@@ -58,10 +59,15 @@ class Title_bar(widgets.QFrame):
             self.POS = event.position().toPoint()
     
     def mouseMoveEvent(self, event: gui.QMouseEvent):
-        
         pos = event.position().toPoint() - self.POS
         
         self.WINDOW.move(
             self.WINDOW.x() + pos.x(),
             self.WINDOW.y() + pos.y()
         )
+
+    def toggle_maximize(self):
+        if self.WINDOW.isMaximized():
+            self.WINDOW.showNormal()  
+        else:
+            self.WINDOW.showMaximized()

@@ -8,61 +8,113 @@ class WeatherFrame(widgets.QFrame):
     def __init__(self, position, weather, city, parent=None):
         super().__init__(parent)
         
-        self.setStyleSheet("background-color: rgba(0, 0, 0, 25); border-radius: 16px")
-        self.setFixedSize(core.QSize(390, 303))
+        self.setStyleSheet("background-color: rgba(0, 0, 0, 46); border-radius: 16px")
+        self.setFixedSize(390,303)
 
-        icon_path="media/weather_icons/02d.svg"
+        self.CURENT_POSITON_CHECK = False
+       
+        font_id = QFontDatabase.addApplicationFont("media/fonts/Comfortaa-Regular.ttf")
+        font_family = QFontDatabase.applicationFontFamilies(font_id)
+
         
-        # вказуємо шлях до шрифту та додаємо його до бази даних шрифтів
-        font_comfortaa_id = QFontDatabase.addApplicationFont("media/fonts/Comfortaa-Regular.ttf")
-          
-        # отримуємо ім'я шрифту за його ідентифікатором та встановлюємо його для віджетів
-        font_family = QFontDatabase.applicationFontFamilies(font_comfortaa_id)
+        self.main_layout = widgets.QVBoxLayout(self)
+        self.main_layout.setContentsMargins(16, 16, 16, 16)
+        self.main_layout.setSpacing(4)
+        self.main_layout.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
 
-        self.central_widget = widgets.QWidget(parent=self)
-        self.central_widget.setGeometry(0, 0, 390, 303)
 
-        self.vertical_layout = widgets.QVBoxLayout()
-        self.vertical_layout.setContentsMargins(0, 16, 0, 16)
-        self.central_widget.setLayout(self.vertical_layout)
 
-        self.position = widgets.QLabel(text=position)
-        self.position.setStyleSheet("background: transparent")
-        self.position.setFont(QFont(font_family, 16))
+        self.CURRENT_POSITION_LABEL = widgets.QLabel()
+        self.CURRENT_POSITION_LABEL.setStyleSheet("background: transparent")
+        self.CURRENT_POSITION_LABEL.setFixedSize(200, 30)
+        self.CURRENT_POSITION_LABEL.setFont(QFont(font_family[0], 12))
 
+        self.LINE_FRAME = widgets.QFrame()
+        self.LINE_FRAME.setStyleSheet("background-color: rgba(255, 255, 255, 0); border-radius: 16px")
+
+        self.LINE_FRAME.setFixedHeight(2)
+
+        self.LINE_FRAME.setSizePolicy(
+            widgets.QSizePolicy.Policy.Expanding,
+            widgets.QSizePolicy.Policy.Fixed
+        )
+
+
+        
+        self.city_label = widgets.QLabel(city or "")
+        self.city_label.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
+        self.city_label.setFont(QFont(font_family[0], 36))
+        self.city_label.setStyleSheet("background: transparent; color: white")
+
+       
         self.weather_layout = widgets.QHBoxLayout()
-        self.weather_layout.setContentsMargins(0, 0, 120, 0)
-        self.weather_layout.setSpacing(5)
-        self.weather_layout.addStretch()
+        self.weather_layout.setSpacing(0)
+        self.weather_layout.setContentsMargins(0, 0, 0, 0)
+        self.weather_layout.setAlignment(core.Qt.AlignmentFlag.AlignHCenter | core.Qt.AlignmentFlag.AlignVCenter)
 
-        self.WEATHER_ICON = widgets.QLabel()
-        self.WEATHER_ICON.setFixedSize(130, 210)
-        self.WEATHER_ICON.setStyleSheet("background: transparent")
 
-        self.weather = widgets.QLabel(text=weather)
-        self.weather.setFixedWidth(90)
-        self.weather.setStyleSheet("background: transparent")
+        self.icon_label = widgets.QLabel()
+        self.icon_label.setFixedSize(150, 150)
+        self.icon_label.setStyleSheet("background: transparent")
+        
 
-        self.weather.setFont(QFont(font_family, 60))
-        self.weather.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
+        self.temp_label = widgets.QLabel(weather or "")
+        self.temp_label.setFont(QFont(font_family[0], 48))
+        self.temp_label.setStyleSheet("background: transparent; color: white; font-size: 80px")
+        self.temp_label.setAlignment(core.Qt.AlignmentFlag.AlignVCenter)
 
-        self.weather_layout.addWidget(self.WEATHER_ICON)
-        self.weather_layout.addWidget(self.weather)
+        self.weather_layout.addWidget(self.icon_label)
+        self.weather_layout.addWidget(self.temp_label)
 
-        self.city = widgets.QLabel(text=city)
-        self.city.setStyleSheet("background: transparent")
-        self.city.setFont(QFont(font_family, 44))
-        self.city.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
+       
+        self.description_label = widgets.QLabel("")
+        self.description_label.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
+        self.description_label.setFont(QFont(font_family[0], 14))
+        self.description_label.setStyleSheet("background: transparent; color: white")
 
-    
-        self.vertical_layout.addWidget(self.position)
-        self.vertical_layout.addWidget(self.city)
-        self.vertical_layout.addLayout(self.weather_layout)
+        
+        self.minmax_label = widgets.QLabel("")
+        self.minmax_label.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
+        self.minmax_label.setFont(QFont(font_family[0], 12))
+        self.minmax_label.setStyleSheet("background: transparent; color: rgba(255,255,255,180)")
 
-    def set_text(self, position, weather, city, icon):
-        self.WEATHER_ICON.setPixmap(gui.QIcon(icon).pixmap(210, 210))
-        self.WEATHER_ICON.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
+        self.main_layout.addWidget(self.CURRENT_POSITION_LABEL)
+        self.main_layout.addWidget(self.LINE_FRAME)
+        
+        self.main_layout.addWidget(self.city_label)
+        self.main_layout.addLayout(self.weather_layout)
+        self.main_layout.addWidget(self.description_label)
+        self.main_layout.addWidget(self.minmax_label)
 
-        self.position.setText(position)
-        self.city.setText(city)
-        self.weather.setText(weather)
+
+    def curent_position(self):
+        if self.CURENT_POSITON_CHECK:
+            self.CURRENT_POSITION_LABEL.setText("Поточна позиція")
+            self.LINE_FRAME.setStyleSheet("background-color: rgba(255, 255, 255, 50); border-radius: 16px")
+
+        else:
+            self.CURRENT_POSITION_LABEL.setText("")
+            self.LINE_FRAME.setStyleSheet("background-color: rgba(255, 255, 255, 0); border-radius: 16px")
+
+
+
+
+    def set_text(self, city, weather, icon, description="", max_temp="", min_temp="", position=None):
+        self.city_label.setText(city or "")
+        self.temp_label.setText(weather or "")
+        self.description_label.setText(description)
+
+        
+        if max_temp and min_temp:
+            self.minmax_label.setText(f"Макс.: {max_temp}°, мин.: {min_temp}°")
+
+        
+        pixmap = gui.QPixmap(icon)
+        self.icon_label.setPixmap(
+            pixmap.scaled(
+                150, 150,
+                core.Qt.AspectRatioMode.KeepAspectRatio,
+                core.Qt.TransformationMode.SmoothTransformation
+            )
+        )
+        self.icon_label.setAlignment(core.Qt.AlignmentFlag.AlignCenter)

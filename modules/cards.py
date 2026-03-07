@@ -2,7 +2,7 @@ import PyQt6.QtCore as core
 import PyQt6.QtWidgets as widgets
 from PyQt6.QtGui import QFont, QFontDatabase
 import PyQt6.QtGui as gui
-from utils import api_request, city_request
+from utils import city_request, get_weather
 
 from datetime import datetime, timedelta
 
@@ -10,23 +10,16 @@ class Cards_widget(widgets.QFrame):
      # створюємо об'єкт сигналу
      frame_clicked = core.pyqtSignal(object)
 
-     def __init__(self, parent, id: int, city_name: str, time: str, weather: str, temp: str, max_temp: str, min_temp: str, is_first = False,):
+     def __init__(self, parent, id: int, city_name: str, is_first=False):
           super().__init__(parent)
 
           self.CITY_NAME = city_name 
-          self.TIME = time
-          self.WEATHER = weather
 
-          self.TEMP = temp
-          self.MAX_TEMP = max_temp
-          self.MIN_TEMP = min_temp
 
           self.ID = id
 
           self.clicked = False
           self.normalColor()
-          self.count = 0
-
 
           
           # вказуємо шлях до шрифту та додаємо його до бази даних шрифтів
@@ -56,17 +49,15 @@ class Cards_widget(widgets.QFrame):
           self.ARROW_LABEL_ICON.setPixmap(gui.QIcon("media/Vector.svg").pixmap(15, 15))
 
           
-
-          
           self.LABEL_CITY_NAME = widgets.QLabel(city_name)
           self.LABEL_CITY_NAME.setStyleSheet("font-size: 24px; background: transparent; ")
           self.LABEL_CITY_NAME.setFont(QFont(font_family,weight = 24))
 
-          self.LABEL_CITY_TIME = widgets.QLabel(time)   
+          self.LABEL_CITY_TIME = widgets.QLabel()   
           self.LABEL_CITY_TIME.setStyleSheet("font-size: 12px; background: transparent;")
           self.LABEL_CITY_TIME.setFont(QFont(font_family, 12))
           
-          self.LABEL_CITY_WEATHER = widgets.QLabel(weather) 
+          self.LABEL_CITY_WEATHER = widgets.QLabel() 
           self.LABEL_CITY_WEATHER.setStyleSheet("font-size: 12px; background: transparent;")
           self.LABEL_CITY_WEATHER.setFont(QFont(font_family, 12))
           
@@ -85,18 +76,16 @@ class Cards_widget(widgets.QFrame):
           self.LEFT_LAYOUT.addWidget(self.LABEL_CITY_WEATHER)
 
 
-          self.CITY_TEMPERATURE = widgets.QLabel(f"{temp}°", self)   
+          self.CITY_TEMPERATURE = widgets.QLabel(self)   
           self.CITY_TEMPERATURE.setStyleSheet("font-size: 40px; background: transparent;")
           self.CITY_TEMPERATURE.setFont(QFont(font_family, 40))
 
           
-
-          self.MAX_MIN_TEMPERATURE = widgets.QLabel(f"Max.:{max_temp}, Min.:{min_temp}")
+          self.MAX_MIN_TEMPERATURE = widgets.QLabel()
           self.MAX_MIN_TEMPERATURE.setStyleSheet("font-size: 12px; background: transparent")
           self.MAX_MIN_TEMPERATURE.setFont(QFont(font_family, 12))
 
-
-          self.api_call()
+          self.load_weather()
           self.update_time()
 
           self.TIMER = core.QTimer()
@@ -111,9 +100,8 @@ class Cards_widget(widgets.QFrame):
           self.LEFT_RIGHT_LAYOUT.addLayout(self.LEFT_LAYOUT)
           self.LEFT_RIGHT_LAYOUT.addLayout(self.RIGHT_LAYOUT)
 
-
+          
          
-               
 
 
      def mousePressEvent(self, event : gui.QMouseEvent):
@@ -121,32 +109,35 @@ class Cards_widget(widgets.QFrame):
           if pressed_button == core.Qt.MouseButton.LeftButton:
               self.clicked = not self.clicked
               self.clcikedColor()
-              self.api_call()
+              self.load_weather()
               #оголошуємо сигнал
               self.frame_clicked.emit(self)
               
      
-     def api_call(self):
-          data_dict = api_request(self.CITY_NAME)
+
+     def load_weather(self):
+          data = get_weather(self.CITY_NAME)
           
-          temp = data_dict["list"][0]["main"]["temp"]
-          weather_description = data_dict["list"][0]["weather"][0]["description"]
+          if data is None:
+               self.LABEL_CITY_WEATHER.setText("ошибка")
+               self.CITY_TEMPERATURE.setText("—°")
+               self.MAX_MIN_TEMPERATURE.setText("Max: —, Min: —")
+               return
+
+          temp = round(data["list"][0]["main"]["temp"])
+          self.weather_description = data["list"][0]["weather"][0]["description"]
+          self.max_temp = round(data["list"][0]["main"]["temp_max"])
+          self.min_temp = round(data["list"][0]["main"]["temp_min"])
           
-          max_temp = data_dict["list"][0]["main"]["temp_max"]
-          max_temp = round(max_temp)
+          self.TIME_ZONE = data["city"]["timezone"]
           
-          min_temp = data_dict["list"][0]["main"]["temp_min"]
-          min_temp = round(min_temp)
-          
-          self.TIME_ZONE  = data_dict["city"]["timezone"]
-          current_temp = round(temp)
- 
-          print(current_temp)
-          print(weather_description)
-          
-          self.CITY_TEMPERATURE.setText(f"{current_temp}°")
-          self.LABEL_CITY_WEATHER.setText(weather_description)
-          self.MAX_MIN_TEMPERATURE.setText(f"Max.: {max_temp}, Min.: {min_temp}")
+          self.CITY_TEMPERATURE.setText(f"{temp}°")
+          self.LABEL_CITY_WEATHER.setText(self.weather_description)
+          self.MAX_MIN_TEMPERATURE.setText(f"Max.: {self.max_temp}, Min.: {self.min_temp}")
+
+          self.TEMP = temp
+
+
 
      def update_time(self):
           if self.TIME_ZONE:

@@ -1,8 +1,5 @@
-import os
-import sys
 import requests
 import json
-
 
 from config import API_KEY
 
@@ -19,9 +16,10 @@ def api_request(city_name: str):
 
 
 def city_request():
-    response = requests.get("http://ip-api.com/json/")
+    response = requests.get("https://ipinfo.io/json")
     data_dict = response.json()
 
     return data_dict["city"]
+
 
 

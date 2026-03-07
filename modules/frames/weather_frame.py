@@ -3,6 +3,8 @@ import PyQt6.QtCore as core
 import PyQt6.QtGui as gui
 from PyQt6.QtGui import QFont, QFontDatabase
 
+import os
+
 
 class WeatherFrame(widgets.QFrame):
     def __init__(self, position, weather, city, parent=None):
@@ -12,8 +14,9 @@ class WeatherFrame(widgets.QFrame):
         self.setFixedSize(390,303)
 
         self.CURENT_POSITON_CHECK = False
-       
-        font_id = QFontDatabase.addApplicationFont("media/fonts/Comfortaa-Regular.ttf")
+        
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        font_id = QFontDatabase.addApplicationFont(os.path.join(BASE_DIR, "..", "..", "media", "fonts", "Comfortaa-Regular.ttf"))
         font_family = QFontDatabase.applicationFontFamilies(font_id)
 
         

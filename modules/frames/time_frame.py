@@ -5,6 +5,8 @@ from PyQt6.QtGui import QFont, QFontDatabase
 
 from datetime import datetime, timedelta
 
+import os
+
 from utils import get_weather, city_request
 
 class TimeFrame(widgets.QFrame):
@@ -17,7 +19,9 @@ class TimeFrame(widgets.QFrame):
         self.setStyleSheet("background-color: rgba(0, 0, 0, 46); border-radius: 16px")
         self.setFixedSize(390,303)
 
-        font_id = QFontDatabase.addApplicationFont("media/fonts/Comfortaa-Regular.ttf")
+
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        font_id = QFontDatabase.addApplicationFont(os.path.join(BASE_DIR, "..", "..", "media", "fonts", "Comfortaa-Regular.ttf"))
         font_family = QFontDatabase.applicationFontFamilies(font_id)
 
 

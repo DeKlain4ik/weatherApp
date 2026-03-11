@@ -38,6 +38,7 @@ class Cards_widget(widgets.QFrame):
           self.LEFT_LAYOUT.setSpacing(2)
 
           self.RIGHT_LAYOUT = widgets.QVBoxLayout()
+          self.RIGHT_LAYOUT.setContentsMargins(0, 0, 50, 0)
           self.RIGHT_LAYOUT.setSpacing(2)
 
           self.ARROW_LAYOUT = widgets.QHBoxLayout()
@@ -92,7 +93,7 @@ class Cards_widget(widgets.QFrame):
           self.TIMER.timeout.connect(self.update_time)
           self.TIMER.start(1000)
 
-          self.RIGHT_LAYOUT.addWidget(self.CITY_TEMPERATURE)
+          self.RIGHT_LAYOUT.addWidget(self.CITY_TEMPERATURE, alignment=core.Qt.AlignmentFlag.AlignRight)
           self.RIGHT_LAYOUT.addWidget(self.MAX_MIN_TEMPERATURE)
      
 

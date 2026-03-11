@@ -24,6 +24,10 @@ class TimeFrame(widgets.QFrame):
         font_id = QFontDatabase.addApplicationFont(os.path.join(BASE_DIR, "..", "..", "media", "fonts", "Comfortaa-Regular.ttf"))
         font_family = QFontDatabase.applicationFontFamilies(font_id)
 
+        self.TIME_WEATHER_FRAME = widgets.QFrame()
+        self.TIME_WEATHER_FRAME.setStyleSheet("background: transparent")
+        
+
 
         self.MAIN_LAYOUT = widgets.QVBoxLayout()
         self.MAIN_LAYOUT.setContentsMargins(20,20,20,20)

@@ -27,6 +27,21 @@ class HeadBar(widgets.QFrame):
         self.BUTTON_SETTINGS.setFixedSize(36, 36)
         self.BUTTON_SETTINGS.setIcon(gui.QIcon("media/settings.svg"))
         self.BUTTON_SETTINGS.setIconSize(self.BUTTON_SETTINGS.size())
+        self.BUTTON_SETTINGS.setStyleSheet("""
+                QPushButton {
+                    background-color: transparent;
+                    border: none;
+                    border-radius: 8px;
+                }
+
+                QPushButton:hover {
+                    background-color: rgba(0, 0, 0, 40);
+                }
+
+                QPushButton:pressed {
+                    background-color: rgba(0, 0, 0, 80);
+                }
+                """)
 
         self.MAIN_LAYOUT.addWidget(self.BUTTON_SETTINGS, alignment=core.Qt.AlignmentFlag.AlignVCenter)
 

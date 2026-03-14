@@ -7,7 +7,8 @@ from .title_bar import Title_bar
 from utils import api_request, city_request, get_weather
 from .scrollarea import ScrollArea
 from .cards import Cards_widget
-from .frames import WeatherFrame, TimeFrame, TimeWeatherFrame
+from .frames import WeatherFrame, TimeFrame, TimeWeatherFrame, WeatherFor12HoursFrame
+from .head_bar import HeadBar
 
 OWM_ICON_MAP = { 
     # Гроза 
@@ -146,6 +147,10 @@ class MainWindow(widgets.QMainWindow):
             widgets.QSizePolicy.Policy.Expanding
         )
 
+        self.HEAD_BAR = HeadBar(parent = self.RIGHT_AREA)
+
+        
+
         self.FIRST_WIDGETS_LAYOUT = widgets.QHBoxLayout()
         self.FIRST_WIDGETS_LAYOUT.setSpacing(10)
     
@@ -161,16 +166,16 @@ class MainWindow(widgets.QMainWindow):
 
         self.TIME_WEATHER_FRAME = TimeWeatherFrame(parent = self.RIGHT_AREA)
         
-        self.WEATHER_FOR_12_HOURS_FRAME = widgets.QFrame(parent = self.RIGHT_AREA)
-        self.WEATHER_FOR_12_HOURS_FRAME.setStyleSheet("background-color: rgba(0, 0, 0, 46); border-radius: 16px")
-        self.WEATHER_FOR_12_HOURS_FRAME.setFixedSize(790, 197)
+        self.WEATHER_FOR_12_HOURS_FRAME = WeatherFor12HoursFrame(parent = self.RIGHT_AREA)
         
 
         self.LEFT_AREA_LAYOUT = widgets.QVBoxLayout()
         self.RIGHT_AREA_LAYOUT = widgets.QVBoxLayout()
         self.RIGHT_AREA_LAYOUT.setContentsMargins(10, 30, 20, 10)
-        self.RIGHT_AREA_LAYOUT.setSpacing(10)
+        self.RIGHT_AREA_LAYOUT.setSpacing(15)
         self.RIGHT_AREA_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
+
+        self.RIGHT_AREA_LAYOUT.addWidget(self.HEAD_BAR)
 
         self.RIGHT_AREA_LAYOUT.addLayout(self.FIRST_WIDGETS_LAYOUT)
         
@@ -244,16 +249,16 @@ class MainWindow(widgets.QMainWindow):
 
         
         self.card4 = Cards_widget(parent=self.SCROLL_AREA,
-                                  id = 4,
-                                  city_name = "Tokyo")
+                                id = 4,
+                                city_name = "Tokyo")
         
         self.card4.frame_clicked.connect(self.clicked)
         self.cards_list.append(self.card4)
         self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card4)
 
         self.card5 = Cards_widget(parent=self.SCROLL_AREA,
-                                  id = 5,
-                                  city_name = "Paris")
+                                id = 5,
+                                city_name = "Paris")
         
         self.card5.frame_clicked.connect(self.clicked)
         self.cards_list.append(self.card5)
@@ -267,70 +272,9 @@ class MainWindow(widgets.QMainWindow):
         self.SCROLL_AREA.SCROLL_LAYOUT.addStretch()   
 
 
-    
-        # self.FRAME = widgets.QFrame(parent = self.CONTENT_FRAME)
-        # self.FRAME.setStyleSheet("background-color: red; ")
-        # self.FRAME.setFixedSize(788, 197)
-        
-        # self.FRAME_LAYOUT = widgets.QVBoxLayout()
-        # self.FRAME.setLayout(self.FRAME_LAYOUT)
-        
-        # self.CONTENT_FRAME_LAYOUT.addWidget(self.FRAME)
-        
-        # self.FRAME1 = widgets.QFrame(parent = self.FRAME)
-        # self.FRAME1.setStyleSheet("background-color: green; ")
-        # self.FRAME1.setFixedSize(730, 24)
-        
-        # self.FRAME1_LAYOUT = widgets.QHBoxLayout()
-        # self.FRAME1.setLayout(self.FRAME1_LAYOUT)
-        
-        # self.FRAME_LAYOUT.addWidget(self.FRAME1)
-        
-        # self.FRAME2 = widgets.QFrame(parent = self.FRAME)
-        # self.FRAME2.setStyleSheet("background-color: blue; ")
-        # self.FRAME2.setFixedWidth(730)
-        
-        # self.FRAME2_LAYOUT = widgets.QHBoxLayout()
-        # self.FRAME2_LAYOUT.setContentsMargins(0, 0, 0, 0)
-        # self.FRAME2_LAYOUT.setSpacing(10)
-        # self.FRAME2_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignLeft)
-        # self.FRAME2.setLayout(self.FRAME2_LAYOUT)     
-        
-        # self.FRAME_LAYOUT.addWidget(self.FRAME2)
-        
-        # self.TEMPERATURE_GRAPH_FRAME = widgets.QFrame(parent = self.FRAME2)
-        # self.TEMPERATURE_GRAPH_FRAME.setMaximumSize(727, 136)
-        
-        # self.TEMPERATURE_GRAPH_FRAME_LAYOUT = widgets.QHBoxLayout()
-        # self.TEMPERATURE_GRAPH_FRAME_LAYOUT.setContentsMargins(0, 0, 0, 0)
-        # self.TEMPERATURE_GRAPH_FRAME_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignBottom)
-        # self.TEMPERATURE_GRAPH_FRAME.setLayout(self.TEMPERATURE_GRAPH_FRAME_LAYOUT)
-        
-        # self.FRAME2_LAYOUT.addWidget(self.TEMPERATURE_GRAPH_FRAME)
-        
-        # data_dict = api_request("Miami")
-        
-        
-        # for hour_data in data_dict["list"]:
-        #     temperature = int(hour_data["main"]["temp"])
-            
-        #     height = 0
-            
-        #     if temperature < 0 :
-        #         height = (temperature * -2)  + 30
-        #     elif temperature == 0:
-        #         height = 30
-        #     else:
-        #         height = temperature * 2 
-            
-        #     self.COLUMN = widgets.QFrame(self.TEMPERATURE_GRAPH_FRAME)
-        #     self.COLUMN.setFixedSize(core.QSize(8, height))
-        #     self.COLUMN.setStyleSheet("background-color: gray; ")
-        #     self.TEMPERATURE_GRAPH_FRAME_LAYOUT.addWidget(self.COLUMN, alignment = core.Qt.AlignmentFlag.AlignBottom)
-
     def clicked(self, clicked_frame):
         for i in self.cards_list:
-             i.normalColor()
+            i.normalColor()
 
         clicked_frame.clcikedColor()
 
@@ -356,11 +300,13 @@ class MainWindow(widgets.QMainWindow):
 
         data_dict = get_weather(self.CITY)
         self.TIME_WEATHER_FRAME.DATA = data_dict
+        self.WEATHER_FOR_12_HOURS_FRAME.DATA = data_dict
         self.TIME_WEATHER_FRAME.load_weather()
+        self.WEATHER_FOR_12_HOURS_FRAME.set_images()
 
         icon_code = data_dict["list"][0]["weather"][0]["icon"]
 
-
+        
         self.WEATHER_FRAME.set_text(position = self.POSITION,
                                     city = self.CITY,
                                     weather = self.WEATHER,
@@ -374,15 +320,15 @@ class MainWindow(widgets.QMainWindow):
 
         img_name = get_icon_name(data_dict["list"][0]["weather"][0]["id"], data_dict["list"][0]["weather"][0]["icon"])
 
+
         self.TIME_WEATHER_FRAME.set_current_weather(icon = img_name,
-                                           temp=self.WEATHER)
+                                        temp=self.WEATHER)
 
 
         print(self.WEATHER)
         
 
 
-         
     def switch_theme(self):
         self.DARK = not self.DARK
 

@@ -84,8 +84,8 @@ class TimeFrame(widgets.QFrame):
 
         self.TIME_FONT_COLOR = gui.QColor('white') 
         self.clock_pixmap = gui.QPixmap("media/clock.svg").scaled(168, 168, 
-                                                                   core.Qt.AspectRatioMode.KeepAspectRatio, 
-                                                                   core.Qt.TransformationMode.SmoothTransformation)
+                                                                core.Qt.AspectRatioMode.KeepAspectRatio, 
+                                                                core.Qt.TransformationMode.SmoothTransformation)
 
         
         self.TIMER = core.QTimer()

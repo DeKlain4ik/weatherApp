@@ -137,7 +137,7 @@ class TimeWeatherFrame(QtWidgets.QFrame):
     CARDS_PER_PAGE = 9
     CARD_WIDTH = HourCard.WIDTH
     CARD_SPACING = 6
-    ANIMATION_DURATION = 520
+    ANIMATION_DURATION = 1020
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -306,7 +306,7 @@ class TimeWeatherFrame(QtWidgets.QFrame):
         for index, entry in enumerate(weather_entries):
             if len(self.cards) >= max_cards:
                 break
-
+                
             date_text = entry.get("dt_txt", "")
             try:
                 entry_datetime = datetime.strptime(date_text, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc) + timedelta(seconds=timezone_offset)

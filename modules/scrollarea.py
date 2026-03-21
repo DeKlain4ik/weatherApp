@@ -24,6 +24,6 @@ class ScrollArea(widgets.QScrollArea):
         self.content = widgets.QFrame()
 
         self.SCROLL_LAYOUT = widgets.QVBoxLayout(self.content)
-        self.SCROLL_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
+        self.SCROLL_LAYOUT.setAlignment(core.Qt.AlignmentFlag.AlignTop)
 
         self.setWidget(self.content)

@@ -30,20 +30,22 @@ def get_weather(city_name):
 
        
         if cache_age < CACHE_TTL:
-            return saved_data["data"]
-        else:
-            print(f"Кэш устарел, запрашиваем заново")
+            if saved_data["data"].get("cod") == "200":
+                return saved_data["data"]
+            else:
+                print(f"Кэш содержит ошибку, запрашиваем заново")
 
     print(f"Запрос к API для города: {city_name}")
     data = api_request(city_name)
 
-    entry = {
-        "timestamp": time.time(),  
-        "data": data               
-    }
+    if data.get("cod") == "200":
+        entry = {
+            "timestamp": time.time(),  
+            "data": data               
+        }
 
-    with open(cache_file, "w", encoding="utf-8") as f:
-        json.dump(entry, f, ensure_ascii=False, indent=2)
+        with open(cache_file, "w", encoding="utf-8") as f:
+            json.dump(entry, f, ensure_ascii=False, indent=2)
 
-    print(f"Сохранено в кэш: {cache_file.name}")
+        print(f"Сохранено в кэш: {cache_file.name}")
     return data

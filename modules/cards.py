@@ -13,7 +13,7 @@ class Cards_widget(widgets.QFrame):
      def __init__(self, parent, id: int, city_name: str, is_first=False):
           super().__init__(parent)
 
-          self.CITY_NAME = city_name 
+          self.CITY_NAME = city_name.lower()
 
 
           self.ID = id

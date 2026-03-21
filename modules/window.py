@@ -148,7 +148,7 @@ class MainWindow(widgets.QMainWindow):
         )
 
         self.HEAD_BAR = HeadBar(parent = self.RIGHT_AREA)
-
+        self.HEAD_BAR.city_selected.connect(self.make_cards)
         
 
         self.FIRST_WIDGETS_LAYOUT = widgets.QHBoxLayout()
@@ -231,47 +231,51 @@ class MainWindow(widgets.QMainWindow):
         self.clicked(self.position)
         
                 
-        self.card2 = Cards_widget(parent=self.SCROLL_AREA,
-                                id = 2,
-                                city_name = "Ettlingen")
+        # self.card2 = Cards_widget(parent=self.SCROLL_AREA,
+        #                         id = 2,
+        #                         city_name = "Ettlingen")
         
-        self.card2.frame_clicked.connect(self.clicked)
-        self.cards_list.append(self.card2)
-        self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card2)
+        # self.card2.frame_clicked.connect(self.clicked)
+        # self.cards_list.append(self.card2)
+        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card2)
 
-        self.card3 = Cards_widget(parent=self.SCROLL_AREA,
-                                id = 3,
-                                city_name = "New York")
+        # self.card3 = Cards_widget(parent=self.SCROLL_AREA,
+        #                         id = 3,
+        #                         city_name = "New York")
         
-        self.card3.frame_clicked.connect(self.clicked)
-        self.cards_list.append(self.card3)
-        self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card3)
-
-        
-        self.card4 = Cards_widget(parent=self.SCROLL_AREA,
-                                id = 4,
-                                city_name = "Tokyo")
-        
-        self.card4.frame_clicked.connect(self.clicked)
-        self.cards_list.append(self.card4)
-        self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card4)
-
-        self.card5 = Cards_widget(parent=self.SCROLL_AREA,
-                                id = 5,
-                                city_name = "Paris")
-        
-        self.card5.frame_clicked.connect(self.clicked)
-        self.cards_list.append(self.card5)
-        self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card5)
+        # self.card3.frame_clicked.connect(self.clicked)
+        # self.cards_list.append(self.card3)
+        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card3)
 
         
+        # self.card4 = Cards_widget(parent=self.SCROLL_AREA,
+        #                         id = 4,
+        #                         city_name = "Tokyo")
+        
+        # self.card4.frame_clicked.connect(self.clicked)
+        # self.cards_list.append(self.card4)
+        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card4)
+
+        # self.card5 = Cards_widget(parent=self.SCROLL_AREA,
+        #                         id = 5,
+        #                         city_name = "Paris")
+        
+        # self.card5.frame_clicked.connect(self.clicked)
+        # self.cards_list.append(self.card5)
+        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card5)
+
+        # self.card6 = Cards_widget(parent=self.SCROLL_AREA,
+        #                         id = 6,
+        #                         city_name = "London")
+        
+        # self.card6.frame_clicked.connect(self.clicked)
+        # self.cards_list.append(self.card6)
+        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card6)
 
         
         self.THEME_BUTTON.clicked.connect(self.switch_theme)
 
-        self.SCROLL_AREA.SCROLL_LAYOUT.addStretch()   
-
-
+        # self.SCROLL_AREA.SCROLL_LAYOUT.addStretch()   # Убираем stretch из init
     def clicked(self, clicked_frame):
         for i in self.cards_list:
             i.normalColor()
@@ -326,7 +330,28 @@ class MainWindow(widgets.QMainWindow):
 
 
         print(self.WEATHER)
-        
+    
+    def make_cards(self, name):
+        for existing_card in self.cards_list:
+            if existing_card.CITY_NAME == name:
+                self.clicked(existing_card)
+                return
+
+        data = get_weather(name)
+        if data.get("cod") != "200":
+            print(f"Город '{name}' не найден, не добавляем")
+            return
+
+        card = Cards_widget(parent=self.SCROLL_AREA,
+                            id=len(self.cards_list) + 1,  # Уникальный ID
+                            city_name=name)
+        card.frame_clicked.connect(self.clicked)
+        self.cards_list.append(card)
+        print(len(self.cards_list))
+        self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(card)  # Добавляем в конец
+        # self.SCROLL_AREA.SCROLL_LAYOUT.addStretch()  # Убираем stretch
+        self.clicked(card)
+
 
 
     def switch_theme(self):

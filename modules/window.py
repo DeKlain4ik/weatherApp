@@ -10,6 +10,9 @@ from .cards import Cards_widget
 from .frames import WeatherFrame, TimeFrame, TimeWeatherFrame, WeatherFor12HoursFrame
 from .head_bar import HeadBar
 
+from settings import Settings
+
+
 OWM_ICON_MAP = { 
     # Гроза 
     200: "200 386", 201: "200 386", 202: "200 386", 
@@ -149,7 +152,7 @@ class MainWindow(widgets.QMainWindow):
 
         self.HEAD_BAR = HeadBar(parent = self.RIGHT_AREA)
         self.HEAD_BAR.city_selected.connect(self.make_cards)
-        
+        self.HEAD_BAR.open_settings_signal.connect(self.open_settings)
 
         self.FIRST_WIDGETS_LAYOUT = widgets.QHBoxLayout()
         self.FIRST_WIDGETS_LAYOUT.setSpacing(10)
@@ -352,7 +355,26 @@ class MainWindow(widgets.QMainWindow):
         # self.SCROLL_AREA.SCROLL_LAYOUT.addStretch()  # Убираем stretch
         self.clicked(card)
 
+    def open_settings(self):
+        if hasattr(self, 'SETTINGS_WINDOW') and self.SETTINGS_WINDOW is not None:
+            if self.SETTINGS_WINDOW.isVisible():
+                self.SETTINGS_WINDOW.raise_()
+                return
+        self.SETTINGS_WINDOW = Settings()
+        self.SETTINGS_WINDOW.main_window = self  
+        self.SETTINGS_WINDOW.show()
+        blur = widgets.QGraphicsBlurEffect()
+        blur.setBlurRadius(20)
+        self.setGraphicsEffect(blur)
 
+    def closeEvent(self, event):
+        if hasattr(self, 'SETTINGS_WINDOW') and self.SETTINGS_WINDOW is not None:
+            try:
+                self.SETTINGS_WINDOW.close()
+            except Exception:
+                pass
+        super().closeEvent(event)
+        
 
     def switch_theme(self):
         self.DARK = not self.DARK

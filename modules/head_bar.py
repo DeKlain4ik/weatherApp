@@ -3,6 +3,7 @@ import PyQt6.QtCore as core
 import PyQt6.QtGui as gui
 from PyQt6.QtGui import QFont, QFontDatabase
 
+
 from datetime import datetime, timedelta
 
 import os
@@ -14,6 +15,7 @@ import json
 class HeadBar(widgets.QFrame):
     # Добавляем сигнал для загрузки города
     city_selected = core.pyqtSignal(str)
+    open_settings_signal = core.pyqtSignal()
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -51,9 +53,13 @@ class HeadBar(widgets.QFrame):
                     background-color: rgba(0, 0, 0, 80);
                 }
                 """)
+        self.BUTTON_SETTINGS.clicked.connect(self.open_settings)
+        
+
         self.SETTINGS_LABEL = widgets.QLabel("Налаштування")
         self.SETTINGS_LABEL.setStyleSheet("background-color: transparent; ")
         self.SETTINGS_LABEL.setFont(QFont(font_family[0], 16))
+
 
         
         self.SEARCH_LINE = widgets.QLineEdit()
@@ -66,7 +72,8 @@ class HeadBar(widgets.QFrame):
 
         self.DROP_LIST = widgets.QCompleter(self.MODEL)
         self.DROP_LIST.setCaseSensitivity(core.Qt.CaseSensitivity.CaseInsensitive)
-
+        
+        self.DROP_LIST.popup().setStyleSheet("background-color: rgba(0, 0, 0, 46); border: none")
         self.DROP_LIST.setCompletionMode(widgets.QCompleter.CompletionMode.PopupCompletion)
 
         self.SEARCH_LINE.setCompleter(self.DROP_LIST)
@@ -78,6 +85,10 @@ class HeadBar(widgets.QFrame):
         self.MAIN_LAYOUT.addWidget(self.BUTTON_SETTINGS)
         self.MAIN_LAYOUT.addWidget(self.SETTINGS_LABEL)
         self.MAIN_LAYOUT.addWidget(self.SEARCH_LINE, alignment=core.Qt.AlignmentFlag.AlignRight)
+
+    def open_settings(self):
+        self.open_settings_signal.emit()
+        
 
     def keyPressEvent(self, event):
         if event.key() == core.Qt.Key.Key_Return or event.key() == core.Qt.Key.Key_Enter:

@@ -4,12 +4,11 @@ import PyQt6.QtGui as gui
 
 from .app import app_obj
 from .title_bar import Title_bar
-from utils import api_request, city_request, get_weather
+from utils import api_request, city_request, get_weather, get_cached_cities
 from .scrollarea import ScrollArea
 from .cards import Cards_widget
 from .frames import WeatherFrame, TimeFrame, TimeWeatherFrame, WeatherFor12HoursFrame
 from .head_bar import HeadBar
-
 from settings import Settings
 
 
@@ -58,6 +57,7 @@ def get_icon_name(weather_id: int, icon_code: str) -> str:
 class MainWindow(widgets.QMainWindow):
     def __init__(self, window_width: int, window_height: int):
         widgets.QMainWindow.__init__(self)
+
         
         self.DARK = True
 
@@ -210,8 +210,6 @@ class MainWindow(widgets.QMainWindow):
         self.SCROLL_AREA = ScrollArea(parent = self.LEFT_AREA)
 
         
-     
-     
         self.LEFT_AREA_LAYOUT.addWidget(self.SCROLL_AREA)
 
         self.CONTENT_FRAME_LAYOUT.addWidget(self.LEFT_AREA, 0)
@@ -231,54 +229,20 @@ class MainWindow(widgets.QMainWindow):
         self.cards_list.append(self.position)
         self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.position)
 
+
+        cached_cities = get_cached_cities()
+
+        for city in cached_cities:
+            if city.strip().lower() == self.position.CITY_NAME.lower():
+                continue  
+
+            self.make_cards(city)
+        
         self.clicked(self.position)
-        
                 
-        # self.card2 = Cards_widget(parent=self.SCROLL_AREA,
-        #                         id = 2,
-        #                         city_name = "Ettlingen")
-        
-        # self.card2.frame_clicked.connect(self.clicked)
-        # self.cards_list.append(self.card2)
-        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card2)
-
-        # self.card3 = Cards_widget(parent=self.SCROLL_AREA,
-        #                         id = 3,
-        #                         city_name = "New York")
-        
-        # self.card3.frame_clicked.connect(self.clicked)
-        # self.cards_list.append(self.card3)
-        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card3)
-
-        
-        # self.card4 = Cards_widget(parent=self.SCROLL_AREA,
-        #                         id = 4,
-        #                         city_name = "Tokyo")
-        
-        # self.card4.frame_clicked.connect(self.clicked)
-        # self.cards_list.append(self.card4)
-        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card4)
-
-        # self.card5 = Cards_widget(parent=self.SCROLL_AREA,
-        #                         id = 5,
-        #                         city_name = "Paris")
-        
-        # self.card5.frame_clicked.connect(self.clicked)
-        # self.cards_list.append(self.card5)
-        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card5)
-
-        # self.card6 = Cards_widget(parent=self.SCROLL_AREA,
-        #                         id = 6,
-        #                         city_name = "London")
-        
-        # self.card6.frame_clicked.connect(self.clicked)
-        # self.cards_list.append(self.card6)
-        # self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(self.card6)
-
         
         self.THEME_BUTTON.clicked.connect(self.switch_theme)
 
-        # self.SCROLL_AREA.SCROLL_LAYOUT.addStretch()   # Убираем stretch из init
     def clicked(self, clicked_frame):
         for i in self.cards_list:
             i.normalColor()
@@ -352,7 +316,6 @@ class MainWindow(widgets.QMainWindow):
         self.cards_list.append(card)
         print(len(self.cards_list))
         self.SCROLL_AREA.SCROLL_LAYOUT.addWidget(card)  # Добавляем в конец
-        # self.SCROLL_AREA.SCROLL_LAYOUT.addStretch()  # Убираем stretch
         self.clicked(card)
 
     def open_settings(self):
@@ -365,7 +328,7 @@ class MainWindow(widgets.QMainWindow):
         self.SETTINGS_WINDOW.show()
         blur = widgets.QGraphicsBlurEffect()
         blur.setBlurRadius(20)
-        self.setGraphicsEffect(blur)
+        self.WINDOW_CONTAINER.setGraphicsEffect(blur)
 
     def closeEvent(self, event):
         if hasattr(self, 'SETTINGS_WINDOW') and self.SETTINGS_WINDOW is not None:

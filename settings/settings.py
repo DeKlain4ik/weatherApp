@@ -15,8 +15,15 @@ class Settings(widgets.QWidget):
         self.setFixedSize(790, 688)
 
         self.setWindowFlags(core.Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(core.Qt.WidgetAttribute.WA_TranslucentBackground)
 
-        self.setStyleSheet("background-color: rgba(0, 0, 0, 190); border-radius: 16px;")
+        self.container = widgets.QFrame(self)
+        self.container.setGeometry(self.rect())
+
+        self.container.setStyleSheet("""
+            background-color: rgba(0, 0, 0, 190);
+            border-radius: 16px;
+        """)
 
 
 
@@ -131,5 +138,5 @@ class Settings(widgets.QWidget):
 
     def closeEvent(self, event):
         if hasattr(self, 'main_window') and self.main_window is not None:
-            self.main_window.setGraphicsEffect(None)
+            self.main_window.WINDOW_CONTAINER.setGraphicsEffect(None)
         super().closeEvent(event)

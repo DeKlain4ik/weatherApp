@@ -49,3 +49,22 @@ def get_weather(city_name):
 
         print(f"Сохранено в кэш: {cache_file.name}")
     return data
+
+def get_cached_cities():
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+    cities = []
+
+    for file in CACHE_DIR.glob("*.json"):
+        try:
+            with open(file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+            if data["data"].get("cod") == "200":
+                city_name = data["data"]["city"]["name"]
+                cities.append(city_name)
+
+        except Exception as e:
+            print(f"Ошибка чтения {file}: {e}")
+
+    return cities

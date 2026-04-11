@@ -68,3 +68,9 @@ def get_cached_cities():
             print(f"Ошибка чтения {file}: {e}")
 
     return cities
+
+def remove_cached_city(city_name):
+    cache_file = get_cache_file_path(city_name)
+    if cache_file.exists():
+        cache_file.unlink()  # удаляет файл
+        print(f"Удалён кэш: {cache_file.name}")

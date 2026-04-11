@@ -4,7 +4,7 @@ import PyQt6.QtGui as gui
 
 from .app import app_obj
 from .title_bar import Title_bar
-from utils import api_request, city_request, get_weather, get_cached_cities
+from utils import api_request, city_request, get_weather, get_cached_cities, remove_cached_city
 from .scrollarea import ScrollArea
 from .cards import Cards_widget
 from .frames import WeatherFrame, TimeFrame, TimeWeatherFrame, WeatherFor12HoursFrame
@@ -323,7 +323,7 @@ class MainWindow(widgets.QMainWindow):
             if self.SETTINGS_WINDOW.isVisible():
                 self.SETTINGS_WINDOW.raise_()
                 return
-        self.SETTINGS_WINDOW = Settings()
+        self.SETTINGS_WINDOW = Settings(main_window=self)
         self.SETTINGS_WINDOW.main_window = self  
         self.SETTINGS_WINDOW.show()
         blur = widgets.QGraphicsBlurEffect()
@@ -337,7 +337,28 @@ class MainWindow(widgets.QMainWindow):
             except Exception:
                 pass
         super().closeEvent(event)
+
+    def remove_card(self, city_name):
         
+        card_to_remove = None
+        for card in self.cards_list:
+            if card.CITY_NAME.lower() == city_name.lower():
+                card_to_remove = card
+                break
+
+        if card_to_remove is None:
+            return
+
+        self.SCROLL_AREA.SCROLL_LAYOUT.removeWidget(card_to_remove)
+        card_to_remove.deleteLater()
+
+        self.cards_list.remove(card_to_remove)
+
+        remove_cached_city(city_name)
+
+        if self.cards_list:
+            self.clicked(self.cards_list[0])
+            
 
     def switch_theme(self):
         self.DARK = not self.DARK

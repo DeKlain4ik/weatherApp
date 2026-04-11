@@ -38,6 +38,25 @@ def api_request(city_name: str):
 
     return data_dict
 
+def api_request_no_file(city_name: str):
+    normalized = city_name.strip()
+    low = normalized.lower()
+
+    if low in CITY_ALIAS:
+        normalized = CITY_ALIAS[low]
+
+    response = requests.get(
+        f"https://api.openweathermap.org/data/2.5/forecast?q={normalized}&units=metric&appid={API_KEY}",
+        timeout=15,
+    )
+
+    data_dict = response.json()
+
+    if data_dict.get("cod") != "200":
+        return {"cod": "404", "message": "City not found"}
+
+    return data_dict
+
 
 def city_request():
     response = requests.get("https://ipinfo.io/json")

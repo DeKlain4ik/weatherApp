@@ -10,12 +10,14 @@ from .pages import SearchPlace, Size, Language, Images
 from .settings_titel_bar import Title_bar
 
 class Settings(widgets.QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, main_window, parent=None):
         super().__init__(parent)
         self.setFixedSize(790, 688)
 
         self.setWindowFlags(core.Qt.WindowType.FramelessWindowHint)
         self.setAttribute(core.Qt.WidgetAttribute.WA_TranslucentBackground)
+
+        self.main_window = main_window
 
         self.container = widgets.QFrame(self)
         self.container.setGeometry(self.rect())
@@ -108,7 +110,7 @@ class Settings(widgets.QWidget):
 
         self.pages_widget.setStyleSheet("background: transparent;")
 
-        self.pages_widget.addWidget(SearchPlace(self)) 
+        self.pages_widget.addWidget(SearchPlace(main_window = self.main_window, parent=self)) 
         self.pages_widget.addWidget(Size(self))  
         self.pages_widget.addWidget(Language(self))  
         self.pages_widget.addWidget(Images(self)) 

@@ -19,7 +19,7 @@ class Language(widgets.QWidget):
         
         self.CENTRAL_LAYOUT = widgets.QVBoxLayout(self)
         self.CENTRAL_LAYOUT.setContentsMargins(10, 30, 10, 10)
-        self.CENTRAL_LAYOUT.setSpacing(0)
+        self.CENTRAL_LAYOUT.setSpacing(30)
 
         label = widgets.QLabel("Оберіть мову додатку")
         label.setFont(QFont(font_family[0], 18))
@@ -30,11 +30,19 @@ class Language(widgets.QWidget):
         label2.setFont(QFont(font_family[0], 12))
         label2.setStyleSheet("background: transparent")
         self.CENTRAL_LAYOUT.addWidget(label2)
+
         self.languages = widgets.QComboBox()
+        self.languages.setStyleSheet("background-color:rgba(0, 0, 0, 146); border-radius: 16px; padding: 5px;")
+        self.languages.setFixedSize(200, 30)
         self.languages.addItem("Українська")
         self.languages.addItem("English")
         self.languages.setFont(QFont(font_family[0], 10))
-        self.languages.CENTRAL_LAYOUT.addWidget(self.languages)
+        self.CENTRAL_LAYOUT.addWidget(self.languages, alignment=core.Qt.AlignmentFlag.AlignLeft)
+
         self.button = widgets.QPushButton("Зберегти")
         self.button.setFont(QFont(font_family[0], 12))
-        self.button.CENTRAL_LAYOUT.addWidget(self.button)
+        self.button.setFixedSize(120, 40)
+        self.button.setStyleSheet("background-color:rgba(0, 0, 0, 46)")
+        self.CENTRAL_LAYOUT.addWidget(self.button, alignment=core.Qt.AlignmentFlag.AlignLeft)
+
+        self.CENTRAL_LAYOUT.addStretch()

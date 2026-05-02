@@ -4,7 +4,7 @@ import PyQt6.QtGui as gui
 
 from .app import app_obj
 from .title_bar import Title_bar
-from utils import api_request, city_request, get_weather, get_cached_cities, remove_cached_city
+from utils import api_request, city_request, get_weather, get_cached_cities, remove_cached_city, tr, weather_icon_path
 from .scrollarea import ScrollArea
 from .cards import Cards_widget
 from .frames import WeatherFrame, TimeFrame, TimeWeatherFrame, WeatherFor12HoursFrame
@@ -244,6 +244,7 @@ class MainWindow(widgets.QMainWindow):
         self.THEME_BUTTON.clicked.connect(self.switch_theme)
 
     def clicked(self, clicked_frame):
+        self.current_card = clicked_frame
         for i in self.cards_list:
             i.normalColor()
 
@@ -251,7 +252,7 @@ class MainWindow(widgets.QMainWindow):
 
 
         if clicked_frame.ID == 0:
-            self.POSITION = "Поточна позицiя"
+            self.POSITION = tr("current_position")
             self.WEATHER_FRAME.CURENT_POSITON_CHECK = True
             self.WEATHER_FRAME.curent_position()
         else:
@@ -275,13 +276,14 @@ class MainWindow(widgets.QMainWindow):
         self.TIME_WEATHER_FRAME.load_weather()
         self.WEATHER_FOR_12_HOURS_FRAME.set_images()
 
+        weather_id = data_dict["list"][0]["weather"][0]["id"]
         icon_code = data_dict["list"][0]["weather"][0]["icon"]
 
         
         self.WEATHER_FRAME.set_text(position = self.POSITION,
                                     city = self.CITY,
                                     weather = self.WEATHER,
-                                    icon=f"media/weather_icons/{icon_code}.svg",
+                                    icon=weather_icon_path(f"media/weather_icons/{icon_code}.svg", weather_id),
                                     description=self.DESCRIPTION,
                                     max_temp = self.MAX_TEMP,
                                     min_temp = self.MIN_TEMP                                
@@ -292,8 +294,9 @@ class MainWindow(widgets.QMainWindow):
         img_name = get_icon_name(data_dict["list"][0]["weather"][0]["id"], data_dict["list"][0]["weather"][0]["icon"])
 
 
-        self.TIME_WEATHER_FRAME.set_current_weather(icon = img_name,
-                                        temp=self.WEATHER)
+        self.TIME_WEATHER_FRAME.set_current_weather(icon=img_name,
+                                        temp=self.WEATHER,
+                                        weather_id=weather_id)
 
 
         print(self.WEATHER)
@@ -387,5 +390,26 @@ class MainWindow(widgets.QMainWindow):
             }
             """)
             self.THEME_BUTTON.setIcon(gui.QIcon("media/SwitchLight.svg"))
+
+    def retranslate_ui(self):
+        if hasattr(self.HEAD_BAR, "retranslate_ui"):
+            self.HEAD_BAR.retranslate_ui()
+
+        for frame in (self.WEATHER_FRAME, self.TIME_FRAME, self.TIME_WEATHER_FRAME, self.WEATHER_FOR_12_HOURS_FRAME):
+            if hasattr(frame, "retranslate_ui"):
+                frame.retranslate_ui()
+
+        for card in self.cards_list:
+            if hasattr(card, "retranslate_ui"):
+                card.retranslate_ui()
+
+        current_card = getattr(self, "current_card", None)
+        if current_card is not None:
+            self.clicked(current_card)
+
+    def refresh_weather_icons(self):
+        current_card = getattr(self, "current_card", None)
+        if current_card is not None:
+            self.clicked(current_card)
 
 main_window = MainWindow(window_width = 1200, window_height = 800)

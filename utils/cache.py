@@ -3,6 +3,7 @@ import time
 from pathlib import Path
 
 from .api_request import api_request
+from .i18n import get_language
 
 
 CACHE_DIR = Path("static/json/weather_cache")
@@ -10,7 +11,7 @@ CACHE_TTL = 15 * 60
 
 def get_cache_file_path(city_name):
     safe_name = city_name.strip().lower().replace(" ", "_")
-    full_path = Path(f"static/json/weather_cache/{safe_name}.json")
+    full_path = Path(f"static/json/weather_cache/{safe_name}_{get_language()}.json")
     return full_path
 
 
@@ -54,6 +55,7 @@ def get_cached_cities():
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
     cities = []
+    seen_cities = set()
 
     for file in CACHE_DIR.glob("*.json"):
         try:
@@ -62,7 +64,10 @@ def get_cached_cities():
 
             if data["data"].get("cod") == "200":
                 city_name = data["data"]["city"]["name"]
-                cities.append(city_name)
+                city_key = city_name.strip().lower()
+                if city_key not in seen_cities:
+                    cities.append(city_name)
+                    seen_cities.add(city_key)
 
         except Exception as e:
             print(f"Ошибка чтения {file}: {e}")
@@ -70,7 +75,7 @@ def get_cached_cities():
     return cities
 
 def remove_cached_city(city_name):
-    cache_file = get_cache_file_path(city_name)
-    if cache_file.exists():
+    safe_name = city_name.strip().lower().replace(" ", "_")
+    for cache_file in CACHE_DIR.glob(f"{safe_name}*.json"):
         cache_file.unlink()  # удаляет файл
         print(f"Удалён кэш: {cache_file.name}")

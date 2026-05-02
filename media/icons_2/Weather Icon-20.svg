@@ -1,0 +1,26 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_i_5132_4789)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M18 4C9.16344 4 2 11.1634 2 20L2.00337 20.3313C2.16721 28.3732 8.28258 35.0157 16.2043 35.9002L16.468 35.927L16.5604 35.9515C16.7019 35.9833 16.849 36 17 36H35L35.2943 35.996C41.262 35.8234 46 30.9545 46 25C46 18.9249 41.0751 14 35 14L34.5683 14.0083C34.1378 14.025 33.7111 14.0666 33.2899 14.1325L32.915 14.198L32.8113 13.9358C30.3965 8.033 24.6037 4 18 4Z" fill="url(#paint0_linear_5132_4789)"/>
+</g>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M16.0713 34.6286C16.2764 34.1158 16.8584 33.8664 17.3712 34.0715C17.884 34.2767 18.1334 34.8586 17.9283 35.3714L15.9283 40.3714C15.7231 40.8842 15.1412 41.1336 14.6284 40.9285C14.1156 40.7234 13.8662 40.1414 14.0713 39.6286L16.0713 34.6286ZM25.0713 34.6286C25.2764 34.1158 25.8584 33.8664 26.3712 34.0715C26.884 34.2767 27.1334 34.8586 26.9283 35.3714L24.9283 40.3714C24.7231 40.8842 24.1412 41.1336 23.6284 40.9285C23.1156 40.7234 22.8662 40.1414 23.0713 39.6286L25.0713 34.6286ZM34.0713 34.6286C34.2764 34.1158 34.8584 33.8664 35.3712 34.0715C35.884 34.2767 36.1334 34.8586 35.9283 35.3714L33.9283 40.3714C33.7231 40.8842 33.1412 41.1336 32.6284 40.9285C32.1156 40.7234 31.8662 40.1414 32.0713 39.6286L34.0713 34.6286Z" fill="url(#paint1_linear_5132_4789)"/>
+<defs>
+<filter id="filter0_i_5132_4789" x="0" y="4" width="46" height="36" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="-2" dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_5132_4789"/>
+</filter>
+<linearGradient id="paint0_linear_5132_4789" x1="5.08244" y1="4" x2="46.4873" y2="35.3565" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="#B4E6FB"/>
+</linearGradient>
+<linearGradient id="paint1_linear_5132_4789" x1="13.9995" y1="33.9998" x2="13.9995" y2="41.0003" gradientUnits="userSpaceOnUse">
+<stop stop-color="#4CAFFF"/>
+<stop offset="1" stop-color="#8FD5FF"/>
+</linearGradient>
+</defs>
+</svg>

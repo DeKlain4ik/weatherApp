@@ -3,6 +3,7 @@ from PyQt6 import QtWidgets as widgets
 import PyQt6.QtGui as gui
 import os
 from PyQt6.QtGui import QFont, QFontDatabase
+from utils import tr
 
 
 class Title_bar(widgets.QFrame):
@@ -25,7 +26,7 @@ class Title_bar(widgets.QFrame):
         
         self.WINDOW = self.window()
 
-        self.text_settings = widgets.QLabel("Налаштування")
+        self.text_settings = widgets.QLabel(tr("settings"))
         self.text_settings.setFont(QFont(font_family[0], 24))
 
         self.text_settings.setStyleSheet("background: transparent; ")
@@ -48,3 +49,6 @@ class Title_bar(widgets.QFrame):
             self.WINDOW.showNormal()  
         else:
             self.WINDOW.showMaximized()
+
+    def retranslate_ui(self):
+        self.text_settings.setText(tr("settings"))

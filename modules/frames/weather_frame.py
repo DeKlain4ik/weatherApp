@@ -4,6 +4,7 @@ import PyQt6.QtGui as gui
 from PyQt6.QtGui import QFont, QFontDatabase
 
 import os
+from utils import load_icon_pixmap, tr
 
 
 class WeatherFrame(widgets.QFrame):
@@ -92,7 +93,7 @@ class WeatherFrame(widgets.QFrame):
 
     def curent_position(self):
         if self.CURENT_POSITON_CHECK:
-            self.CURRENT_POSITION_LABEL.setText("Поточна позиція")
+            self.CURRENT_POSITION_LABEL.setText(tr("current_position"))
             self.LINE_FRAME.setStyleSheet("background-color: rgba(255, 255, 255, 50); border-radius: 16px")
 
         else:
@@ -109,15 +110,13 @@ class WeatherFrame(widgets.QFrame):
 
         
         if max_temp and min_temp:
-            self.minmax_label.setText(f"Макс.: {max_temp}°, мин.: {min_temp}°")
+            self.minmax_label.setText(tr("max_min", max_temp=max_temp, min_temp=min_temp))
 
         
-        pixmap = gui.QPixmap(icon)
         self.icon_label.setPixmap(
-            pixmap.scaled(
-                150, 150,
-                core.Qt.AspectRatioMode.KeepAspectRatio,
-                core.Qt.TransformationMode.SmoothTransformation
-            )
+            load_icon_pixmap(icon, 120, 120)
         )
         self.icon_label.setAlignment(core.Qt.AlignmentFlag.AlignCenter)
+
+    def retranslate_ui(self):
+        self.curent_position()

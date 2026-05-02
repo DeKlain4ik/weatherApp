@@ -3,6 +3,7 @@ import PyQt6.QtCore as core
 import PyQt6.QtGui as gui
 from PyQt6.QtGui import QFont, QFontDatabase
 import os
+from utils import tr
 
 
 class Size(widgets.QWidget):
@@ -22,10 +23,10 @@ class Size(widgets.QWidget):
         self.CENTRAL_LAYOUT.setContentsMargins(10, 30, 10, 10)
         self.CENTRAL_LAYOUT.setSpacing(0)
 
-        label = widgets.QLabel("Розмір додатку")
-        label.setFont(QFont(self.font_family[0], 18))
-        label.setStyleSheet("background: transparent;")
-        self.CENTRAL_LAYOUT.addWidget(label, alignment=core.Qt.AlignmentFlag.AlignTop | core.Qt.AlignmentFlag.AlignLeft)
+        self.label = widgets.QLabel()
+        self.label.setFont(QFont(self.font_family[0], 18))
+        self.label.setStyleSheet("background: transparent;")
+        self.CENTRAL_LAYOUT.addWidget(self.label, alignment=core.Qt.AlignmentFlag.AlignTop | core.Qt.AlignmentFlag.AlignLeft)
 
         self.WINDOW_SIZE_LAYOUT = widgets.QVBoxLayout()
         self.WINDOW_SIZE_LAYOUT.setContentsMargins(10, 10, 10, 10)
@@ -48,7 +49,7 @@ class Size(widgets.QWidget):
         self.SAVE_BUTTON_SIZE.setStyleSheet("background-color:rgba(0, 0, 0, 46)")
         self.SAVE_BUTTON_SIZE.clicked.connect(self.save_button_function)
         self.WINDOW_SIZE_LAYOUT.addWidget(self.SAVE_BUTTON_SIZE)
-        self.SAVE_BUTTON_SIZE.setText("Зберегти")
+        self.retranslate_ui()
 
         current_size = self.main_window.size() if self.main_window else core.QSize(1200, 800)
         
@@ -61,7 +62,11 @@ class Size(widgets.QWidget):
         elif current_size.width() == 1728 and current_size.height() == 1117:
             self.RADIO_BUTTOM_SIZE_4.setChecked(True)
         else:
-            self.RADIO_BUTTOM_SIZE_1.setChecked(True) 
+            self.RADIO_BUTTOM_SIZE_1.setChecked(True)
+
+    def retranslate_ui(self):
+        self.label.setText(tr("app_size"))
+        self.SAVE_BUTTON_SIZE.setText(tr("save"))
 
     def save_button_function(self):
         if self.RADIO_BUTTOM_SIZE_1.isChecked():

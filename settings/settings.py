@@ -5,6 +5,7 @@ from PyQt6.QtGui import QFont, QFontDatabase
 import os
 
 from modules import app_obj
+from utils import tr
 from .pages import SearchPlace, Size, Language, Images
 
 from .settings_titel_bar import Title_bar
@@ -68,16 +69,16 @@ class Settings(widgets.QWidget):
         self.buttons_dict = {}
         self.button_list = []
         
-        button_names = ["Пошук міста", "Розмір додатку", "Мова додатку", "Списки зображень"]
+        self.button_keys = ["search_city", "app_size", "app_language", "image_lists"]
         
-        for idx, name in enumerate(button_names):
-            btn = widgets.QPushButton(name)
+        for idx, key in enumerate(self.button_keys):
+            btn = widgets.QPushButton(tr(key))
             btn.setFont(QFont(font_family[0], 14))
             btn.setStyleSheet("background: transparent; color: rgba(255,255,255,150); border: none; text-align: left; padding: 10px;")
             btn.setCursor(core.Qt.CursorShape.PointingHandCursor)
-            btn.setObjectName(name)
+            btn.setObjectName(key)
             self.SCROLL_LAYOUT.addWidget(btn, alignment=core.Qt.AlignmentFlag.AlignTop)
-            self.buttons_dict[name] = btn
+            self.buttons_dict[key] = btn
             self.button_list.append(btn)
         
         self.button_list[0].clicked.connect(self.on_button_0_clicked)
@@ -116,6 +117,18 @@ class Settings(widgets.QWidget):
         self.pages_widget.addWidget(Images(self)) 
         
         self.show_page(0)
+
+    def retranslate_ui(self):
+        if hasattr(self.TITLE_BAR, "retranslate_ui"):
+            self.TITLE_BAR.retranslate_ui()
+
+        for key, btn in zip(self.button_keys, self.button_list):
+            btn.setText(tr(key))
+
+        for index in range(self.pages_widget.count()):
+            page = self.pages_widget.widget(index)
+            if hasattr(page, "retranslate_ui"):
+                page.retranslate_ui()
     
     def show_page(self, index):
         self.pages_widget.setCurrentIndex(index)

@@ -4,6 +4,7 @@ import PyQt6.QtGui as gui
 from PyQt6.QtGui import QFont, QFontDatabase
 
 import os
+from utils import load_icon_pixmap, tr, weather_icon_path
 
 OWM_ICON_MAP = { 
     # Гроза 
@@ -65,7 +66,7 @@ class WeatherFor12HoursFrame(widgets.QFrame):
         self.MAIN_LAYOUT.setContentsMargins(20,15,20,0)
         self.MAIN_LAYOUT.setSpacing(5)
 
-        self.FORECAST_TEXT = widgets.QLabel("Прогноз на 12 годин")
+        self.FORECAST_TEXT = widgets.QLabel()
         self.FORECAST_TEXT.setFixedSize(180, 20)
         self.FORECAST_TEXT.setStyleSheet("background: transparent;")
         self.FORECAST_TEXT.setFont(QFont(font_family[0], 12))
@@ -131,6 +132,7 @@ class WeatherFor12HoursFrame(widgets.QFrame):
             self.NUMBERS_LAYOUT.addWidget(numb)
         
         self.MAIN_LAYOUT.addStretch()
+        self.retranslate_ui()
         
     def set_images(self):
         
@@ -145,13 +147,13 @@ class WeatherFor12HoursFrame(widgets.QFrame):
             self.IMAGE.setStyleSheet("background: transparent")
             self.IMAGE.setFixedSize(16, 16)
 
-            pixmap = gui.QPixmap(f"media/icons_12hours/{img}.svg")
+            pixmap = load_icon_pixmap(
+                weather_icon_path(f"media/icons_12hours/{img}.svg", list[i]["weather"][0]["id"]),
+                16,
+                16,
+            )
             self.IMAGE.setPixmap(
-                pixmap.scaled(
-                    16, 16,
-                    core.Qt.AspectRatioMode.KeepAspectRatio,
-                    core.Qt.TransformationMode.SmoothTransformation
-                )
+                pixmap
             )
             self.IMAGE_H_LAYOUT.addWidget(self.IMAGE)
 
@@ -185,3 +187,6 @@ class WeatherFor12HoursFrame(widgets.QFrame):
             widget = item.widget()
             if widget is not None:
                 widget.deleteLater()  
+
+    def retranslate_ui(self):
+        self.FORECAST_TEXT.setText(tr("forecast_12_hours"))

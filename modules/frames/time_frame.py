@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import os
 
 from utils import get_weather, city_request
+from utils import tr, weekday_name
 
 class TimeFrame(widgets.QFrame):
     def __init__(self, parent=None):
@@ -35,7 +36,7 @@ class TimeFrame(widgets.QFrame):
         
         self.setLayout(self.MAIN_LAYOUT)
         
-        self.TODAY_LABEL = widgets.QLabel(text="Today")
+        self.TODAY_LABEL = widgets.QLabel()
         self.TODAY_LABEL.setStyleSheet("background: transparent")
         self.TODAY_LABEL.setFixedSize(200, 30)
         self.TODAY_LABEL.setFont(QFont(font_family[0], 12))
@@ -56,7 +57,7 @@ class TimeFrame(widgets.QFrame):
 
         self.NOW = datetime.now()
         
-        self.DAY = self.NOW.strftime("%A")
+        self.DAY = weekday_name(self.NOW)
         self.DATE = self.NOW.strftime("%d.%m.%Y")        
 
         self.DAY_LABEL = widgets.QLabel(text=self.DAY )
@@ -104,6 +105,7 @@ class TimeFrame(widgets.QFrame):
         
         
         self.MAIN_LAYOUT.addStretch()
+        self.retranslate_ui()
 
 
     def time_now(self):
@@ -136,4 +138,7 @@ class TimeFrame(widgets.QFrame):
 
         self.IMAGE_LABEL.setPixmap(combined_pixmap)
 
-        
+    def retranslate_ui(self):
+        self.NOW = datetime.now()
+        self.TODAY_LABEL.setText(tr("today"))
+        self.DAY_LABEL.setText(weekday_name(self.NOW))

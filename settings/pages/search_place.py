@@ -7,6 +7,7 @@ import json
 import folium
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from utils import api_request_no_file
+from utils import tr
 import tempfile
 
 
@@ -36,10 +37,10 @@ class SearchPlace(widgets.QWidget):
         self.CENTRAL_LAYOUT.setContentsMargins(10, 30, 10, 10)
         self.CENTRAL_LAYOUT.setSpacing(20)
 
-        label = widgets.QLabel("Пошук міста")
-        label.setFont(QFont(font_family[0], 18))
-        label.setStyleSheet("background: transparent;")
-        self.CENTRAL_LAYOUT.addWidget(label, alignment=core.Qt.AlignmentFlag.AlignTop | core.Qt.AlignmentFlag.AlignLeft)
+        self.label = widgets.QLabel()
+        self.label.setFont(QFont(font_family[0], 18))
+        self.label.setStyleSheet("background: transparent;")
+        self.CENTRAL_LAYOUT.addWidget(self.label, alignment=core.Qt.AlignmentFlag.AlignTop | core.Qt.AlignmentFlag.AlignLeft)
         
         self.MapLayout = widgets.QHBoxLayout()
 
@@ -55,7 +56,7 @@ class SearchPlace(widgets.QWidget):
         self.CITIES = self.get_cities()
 
         
-        self.COUNTRY_NAME = widgets.QLabel("Країна")
+        self.COUNTRY_NAME = widgets.QLabel()
         self.COUNTRY_NAME.setFont(QFont(font_family[0], 12))
         self.COUNTRY_NAME.setStyleSheet("background: transparent;")
 
@@ -85,7 +86,7 @@ class SearchPlace(widgets.QWidget):
             # print(country["country"])
             self.COUNTRY_BOX.addItem(country["country"])
 
-        self.CITY_NAME = widgets.QLabel("Місто")
+        self.CITY_NAME = widgets.QLabel()
         self.CITY_NAME.setFont(QFont(font_family[0], 12))
         self.CITY_NAME.setStyleSheet("background: transparent;")
         
@@ -116,7 +117,7 @@ class SearchPlace(widgets.QWidget):
         
         self.CITY_BOX.currentTextChanged.connect(self.coordinates_finding)
 
-        self.COORDIANTE_NAME = widgets.QLabel("Координати")
+        self.COORDIANTE_NAME = widgets.QLabel()
         self.COORDIANTE_NAME.setFont(QFont(font_family[0], 12))
         self.COORDIANTE_NAME.setStyleSheet("background: transparent;")
         
@@ -131,7 +132,7 @@ class SearchPlace(widgets.QWidget):
         self.textLayout.addWidget(self.coordinate_label)
 
 
-        self.button_save = widgets.QPushButton("Зберегти")
+        self.button_save = widgets.QPushButton()
         self.button_save.setFont(QFont(font_family[0], 12))
         self.button_save.setFixedSize(120,50)
         self.button_save.setStyleSheet("background-color: rgba(0, 0, 0, 86); border-radius: 16px; padding: 10px;")
@@ -154,14 +155,15 @@ class SearchPlace(widgets.QWidget):
         for card in self.main_window.cards_list:
             self.add_list_item(card.CITY_NAME)
 
-        cities = widgets.QLabel("Додані міста")
-        cities.setFont(QFont(font_family[0], 18))
-        cities.setStyleSheet("background: transparent;")
-        self.CENTRAL_LAYOUT.addWidget(cities, alignment=core.Qt.AlignmentFlag.AlignTop | core.Qt.AlignmentFlag.AlignLeft)
+        self.cities_label = widgets.QLabel()
+        self.cities_label.setFont(QFont(font_family[0], 18))
+        self.cities_label.setStyleSheet("background: transparent;")
+        self.CENTRAL_LAYOUT.addWidget(self.cities_label, alignment=core.Qt.AlignmentFlag.AlignTop | core.Qt.AlignmentFlag.AlignLeft)
 
         self.CENTRAL_LAYOUT.addWidget(self.city_list)
 
         self.CENTRAL_LAYOUT.addStretch()
+        self.retranslate_ui()
 
     def show_city_on_map(self, lat, lon):
         self.city_map = folium.Map(
@@ -186,7 +188,7 @@ class SearchPlace(widgets.QWidget):
                 self.main_window.make_cards(self.CITY_BOX.currentText())
 
         else:
-            print("Координаты не найдены. Пожалуйста, выберите город.")
+            print(tr("city_not_found"))
 
     def add_list_item(self, city_name):
         item = widgets.QListWidgetItem(self.city_list)
@@ -254,7 +256,7 @@ class SearchPlace(widgets.QWidget):
         self.CITY_DATA = api_request_no_file(city)
         if self.CITY_DATA.get("cod") == "404":
             self.coord = None
-            self.coordinate_label.setText("Місто не знайдено")
+            self.coordinate_label.setText(tr("city_not_found"))
             return
         self.coord = self.CITY_DATA["city"]["coord"]
         self.coordinate_label.setText(f"{self.coord['lat'] }, {self.coord['lon']}")
@@ -263,3 +265,13 @@ class SearchPlace(widgets.QWidget):
         with open("static/json/cities.json", mode="r", encoding="utf-8") as file:
             data = json.load(file)
             return data["data"]
+
+    def retranslate_ui(self):
+        self.label.setText(tr("search_city"))
+        self.COUNTRY_NAME.setText(tr("country"))
+        self.CITY_NAME.setText(tr("city"))
+        self.COORDIANTE_NAME.setText(tr("coordinates"))
+        self.button_save.setText(tr("save"))
+        self.cities_label.setText(tr("added_cities"))
+        if self.coord is None and self.coordinate_label.text():
+            self.coordinate_label.setText(tr("city_not_found"))

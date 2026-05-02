@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 import os
 import json
+from utils import tr
 
 # from .window import main_window  # Убираем циркулярный импорт
 
@@ -56,7 +57,7 @@ class HeadBar(widgets.QFrame):
         self.BUTTON_SETTINGS.clicked.connect(self.open_settings)
         
 
-        self.SETTINGS_LABEL = widgets.QLabel("Налаштування")
+        self.SETTINGS_LABEL = widgets.QLabel()
         self.SETTINGS_LABEL.setStyleSheet("background-color: transparent; ")
         self.SETTINGS_LABEL.setFont(QFont(font_family[0], 16))
 
@@ -64,7 +65,7 @@ class HeadBar(widgets.QFrame):
         
         self.SEARCH_LINE = widgets.QLineEdit()
         self.SEARCH_LINE.setFixedSize(261, 36)
-        self.SEARCH_LINE.setPlaceholderText("Пошук")
+        self.SEARCH_LINE.setPlaceholderText(tr("search"))
         self.SEARCH_LINE.setStyleSheet("background-color: rgba(0, 0, 0, 46); border-radius: 4px; color: white; padding-left: 10px;")
         self.SEARCH_LINE.setFont(QFont(font_family[0], 12))
 
@@ -85,6 +86,7 @@ class HeadBar(widgets.QFrame):
         self.MAIN_LAYOUT.addWidget(self.BUTTON_SETTINGS)
         self.MAIN_LAYOUT.addWidget(self.SETTINGS_LABEL)
         self.MAIN_LAYOUT.addWidget(self.SEARCH_LINE, alignment=core.Qt.AlignmentFlag.AlignRight)
+        self.retranslate_ui()
 
     def open_settings(self):
         self.open_settings_signal.emit()
@@ -110,3 +112,7 @@ class HeadBar(widgets.QFrame):
         ]
 
         self.MODEL.setStringList(list[:10])
+
+    def retranslate_ui(self):
+        self.SETTINGS_LABEL.setText(tr("settings"))
+        self.SEARCH_LINE.setPlaceholderText(tr("search"))

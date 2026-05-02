@@ -2,7 +2,7 @@ import PyQt6.QtCore as core
 import PyQt6.QtWidgets as widgets
 from PyQt6.QtGui import QFont, QFontDatabase
 import PyQt6.QtGui as gui
-from utils import city_request, get_weather
+from utils import city_request, get_weather, tr
 
 from datetime import datetime, timedelta
 
@@ -120,9 +120,9 @@ class Cards_widget(widgets.QFrame):
           data = get_weather(self.CITY_NAME)
           
           if data is None:
-               self.LABEL_CITY_WEATHER.setText("ошибка")
-               self.CITY_TEMPERATURE.setText("—°")
-               self.MAX_MIN_TEMPERATURE.setText("Max: —, Min: —")
+               self.LABEL_CITY_WEATHER.setText(tr("error"))
+               self.CITY_TEMPERATURE.setText(tr("empty_temperature"))
+               self.MAX_MIN_TEMPERATURE.setText(tr("empty_max_min"))
                return
 
           temp = round(data["list"][0]["main"]["temp"])
@@ -134,7 +134,7 @@ class Cards_widget(widgets.QFrame):
           
           self.CITY_TEMPERATURE.setText(f"{temp}°")
           self.LABEL_CITY_WEATHER.setText(self.weather_description)
-          self.MAX_MIN_TEMPERATURE.setText(f"Max.: {self.max_temp}, Min.: {self.min_temp}")
+          self.MAX_MIN_TEMPERATURE.setText(tr("card_max_min", max_temp=self.max_temp, min_temp=self.min_temp))
 
           self.TEMP = temp
 
@@ -165,4 +165,7 @@ class Cards_widget(widgets.QFrame):
                               }
                               
                               """)
+
+     def retranslate_ui(self):
+          self.load_weather()
           

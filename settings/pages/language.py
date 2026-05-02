@@ -3,6 +3,7 @@ import PyQt6.QtCore as core
 import PyQt6.QtGui as gui
 from PyQt6.QtGui import QFont, QFontDatabase
 import os
+from utils import LANGUAGE_NAMES, get_language, set_language, tr
 
 
 class Language(widgets.QWidget):
@@ -21,28 +22,50 @@ class Language(widgets.QWidget):
         self.CENTRAL_LAYOUT.setContentsMargins(10, 30, 10, 10)
         self.CENTRAL_LAYOUT.setSpacing(30)
 
-        label = widgets.QLabel("Оберіть мову додатку")
-        label.setFont(QFont(font_family[0], 18))
-        label.setStyleSheet("background: transparent;")
-        self.CENTRAL_LAYOUT.addWidget(label, alignment=core.Qt.AlignmentFlag.AlignTop | core.Qt.AlignmentFlag.AlignLeft)
+        self.label = widgets.QLabel()
+        self.label.setFont(QFont(font_family[0], 18))
+        self.label.setStyleSheet("background: transparent;")
+        self.CENTRAL_LAYOUT.addWidget(self.label, alignment=core.Qt.AlignmentFlag.AlignTop | core.Qt.AlignmentFlag.AlignLeft)
 
-        label2 = widgets.QLabel("Мова додатку")
-        label2.setFont(QFont(font_family[0], 12))
-        label2.setStyleSheet("background: transparent")
-        self.CENTRAL_LAYOUT.addWidget(label2)
+        self.label2 = widgets.QLabel()
+        self.label2.setFont(QFont(font_family[0], 12))
+        self.label2.setStyleSheet("background: transparent")
+        self.CENTRAL_LAYOUT.addWidget(self.label2)
 
         self.languages = widgets.QComboBox()
         self.languages.setStyleSheet("background-color:rgba(0, 0, 0, 146); border-radius: 16px; padding: 5px;")
         self.languages.setFixedSize(200, 30)
-        self.languages.addItem("Українська")
-        self.languages.addItem("English")
+        for code, name in LANGUAGE_NAMES.items():
+            self.languages.addItem(name, code)
+        current_index = self.languages.findData(get_language())
+        if current_index >= 0:
+            self.languages.setCurrentIndex(current_index)
         self.languages.setFont(QFont(font_family[0], 10))
         self.CENTRAL_LAYOUT.addWidget(self.languages, alignment=core.Qt.AlignmentFlag.AlignLeft)
 
-        self.button = widgets.QPushButton("Зберегти")
+        self.button = widgets.QPushButton()
         self.button.setFont(QFont(font_family[0], 12))
         self.button.setFixedSize(120, 40)
         self.button.setStyleSheet("background-color:rgba(0, 0, 0, 46)")
+        self.button.clicked.connect(self.save_language)
         self.CENTRAL_LAYOUT.addWidget(self.button, alignment=core.Qt.AlignmentFlag.AlignLeft)
 
         self.CENTRAL_LAYOUT.addStretch()
+        self.retranslate_ui()
+
+    def save_language(self):
+        selected_language = self.languages.currentData()
+        set_language(selected_language)
+
+        settings_window = self.window()
+        if hasattr(settings_window, "retranslate_ui"):
+            settings_window.retranslate_ui()
+
+        main_window = getattr(settings_window, "main_window", None)
+        if main_window and hasattr(main_window, "retranslate_ui"):
+            main_window.retranslate_ui()
+
+    def retranslate_ui(self):
+        self.label.setText(tr("choose_app_language"))
+        self.label2.setText(tr("app_language"))
+        self.button.setText(tr("save"))

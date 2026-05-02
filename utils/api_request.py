@@ -3,6 +3,7 @@ import json
 
 import dotenv
 import os
+from .i18n import weather_api_language
 
 dotenv.load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -22,7 +23,7 @@ def api_request(city_name: str):
         normalized = CITY_ALIAS[low]
 
     response = requests.get(
-        f"https://api.openweathermap.org/data/2.5/forecast?q={normalized}&units=metric&appid={API_KEY}",
+        f"https://api.openweathermap.org/data/2.5/forecast?q={normalized}&units=metric&lang={weather_api_language()}&appid={API_KEY}",
         timeout=15,
     )
 
@@ -46,7 +47,7 @@ def api_request_no_file(city_name: str):
         normalized = CITY_ALIAS[low]
 
     response = requests.get(
-        f"https://api.openweathermap.org/data/2.5/forecast?q={normalized}&units=metric&appid={API_KEY}",
+        f"https://api.openweathermap.org/data/2.5/forecast?q={normalized}&units=metric&lang={weather_api_language()}&appid={API_KEY}",
         timeout=15,
     )
 

@@ -3,6 +3,7 @@ from datetime import datetime, timezone, timedelta
 
 from PyQt6 import QtCore, QtWidgets, QtGui
 from PyQt6.QtGui import QFont, QFontDatabase
+from utils import load_icon_pixmap, tr, weather_icon_path
 
 
 WEATHER_ID_TO_ICON = {
@@ -63,14 +64,10 @@ class HourCard(QtWidgets.QWidget):
         self.icon_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.icon_label.setStyleSheet("background: transparent;")
 
-        icon_pixmap = QtGui.QPixmap(icon_path)
+        icon_pixmap = load_icon_pixmap(icon_path, 20, 20)
         if not icon_pixmap.isNull():
             self.icon_label.setPixmap(
-                icon_pixmap.scaled(
-                    24, 24,
-                    QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-                    QtCore.Qt.TransformationMode.SmoothTransformation
-                )
+                icon_pixmap
             )
         layout.addWidget(self.icon_label, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
 
@@ -80,14 +77,10 @@ class HourCard(QtWidgets.QWidget):
         layout.addWidget(self.temperature_label)
 
     def update(self, icon_path, temperature_text):
-        icon_pixmap = QtGui.QPixmap(icon_path)
+        icon_pixmap = load_icon_pixmap(icon_path, 20, 20)
         if not icon_pixmap.isNull():
             self.icon_label.setPixmap(
-                icon_pixmap.scaled(
-                    24, 24,
-                    QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-                    QtCore.Qt.TransformationMode.SmoothTransformation
-                )
+                icon_pixmap
             )
         self.temperature_label.setText(temperature_text)
 
@@ -116,14 +109,10 @@ class SunCard(QtWidgets.QWidget):
         self.icon_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.icon_label.setStyleSheet("background: transparent;")
 
-        icon_pixmap = QtGui.QPixmap(icon_path)
+        icon_pixmap = load_icon_pixmap(icon_path, 20, 20)
         if not icon_pixmap.isNull():
             self.icon_label.setPixmap(
-                icon_pixmap.scaled(
-                    24, 24,
-                    QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-                    QtCore.Qt.TransformationMode.SmoothTransformation
-                )
+                icon_pixmap
             )
         layout.addWidget(self.icon_label, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
 
@@ -160,7 +149,7 @@ class TimeWeatherFrame(QtWidgets.QFrame):
         root_layout.setContentsMargins(10, 10, 10, 5)
         root_layout.setSpacing(3)
 
-        self.HEADER = QtWidgets.QLabel("Погода до кінця дня")
+        self.HEADER = QtWidgets.QLabel()
         self.HEADER.setFixedHeight(24)
         self.HEADER.setStyleSheet("background: transparent; color: white;")
         self.HEADER.setFont(self.font)
@@ -217,6 +206,7 @@ class TimeWeatherFrame(QtWidgets.QFrame):
         self.animation.finished.connect(self.anim_done)
 
         self.update_arrows()
+        self.retranslate_ui()
 
     def page_width(self):
         viewport_width = self.viewport.viewport().width()
@@ -333,7 +323,7 @@ class TimeWeatherFrame(QtWidgets.QFrame):
                 sunrise_card = SunCard(
                     sunrise_datetime.strftime("%H:%M"),
                     "media/icons_12hours/sunrise.svg",
-                    "Схід"
+                    tr("sunrise")
                 )
                 self.strip_layout.addWidget(sunrise_card)
                 self.cards.append(sunrise_card)
@@ -350,7 +340,7 @@ class TimeWeatherFrame(QtWidgets.QFrame):
                 sunset_card = SunCard(
                     sunset_datetime.strftime("%H:%M"),
                     "media/icons_12hours/sunset.svg",
-                    "Захід"
+                    tr("sunset")
                 )
                 self.strip_layout.addWidget(sunset_card)
                 self.cards.append(sunset_card)
@@ -362,8 +352,8 @@ class TimeWeatherFrame(QtWidgets.QFrame):
             temperature = int(round(entry["main"]["temp"]))
             weather_data = entry["weather"][0] if isinstance(entry["weather"], list) else entry["weather"]
             icon_name = get_icon(weather_data.get("id", 800), weather_data.get("icon", "01d"))
-            icon_path = f"media/icons_12hours/{icon_name}.svg"
-            time_display = "Зараз" if index == 0 else entry_datetime.strftime("%H:%M")
+            icon_path = weather_icon_path(f"media/icons_12hours/{icon_name}.svg", weather_data.get("id", 800))
+            time_display = tr("now") if index == 0 else entry_datetime.strftime("%H:%M")
 
             hour_card = HourCard(time_display, icon_path, f"{temperature}°")
             self.strip_layout.addWidget(hour_card)
@@ -376,6 +366,9 @@ class TimeWeatherFrame(QtWidgets.QFrame):
         self.viewport.horizontalScrollBar().setValue(0)
         self.update_arrows()
 
-    def set_current_weather(self, icon, temp):
+    def set_current_weather(self, icon, temp, weather_id=None):
         if self.cards and isinstance(self.cards[0], HourCard):
-            self.cards[0].update(f"media/icons_12hours/{icon}.svg", temp)
+            self.cards[0].update(weather_icon_path(f"media/icons_12hours/{icon}.svg", weather_id), temp)
+
+    def retranslate_ui(self):
+        self.HEADER.setText(tr("weather_until_end_day"))

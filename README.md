@@ -4,25 +4,24 @@
 ## 📌 Description
 
 **Weather App** is a simple and user-friendly application that allows users to check current weather conditions and forecasts for any location.
-The project is designed to provide accurate, real-time weather data with a clean and intuitive interface.
+The project provides accurate, real-time weather data with a clean interface.
 
 ---
 
 ## 🚀 Features
 
 * 🌍 Search weather by city name
-* 🌡️ Display current temperature and conditions
-* 📅 Weather forecast (daily/hourly)
-* 💨 Additional data (humidity, wind speed, etc.)
-* 📱 Responsive and easy-to-use interface
+* 🌡️ Current temperature and conditions
+* 📅 Weather forecast
+* 💨 Humidity, wind speed, etc.
 
 ---
 
 ## 🛠️ Technologies Used
 
-* Frontend: HTML, CSS, JavaScript
-* Backend (if applicable): *(add your tech here, e.g. Node.js / Python / etc.)*
-* API: *(e.g. OpenWeatherMap API or other weather service)*
+* Python
+* PyQt6
+* Weather API *(e.g. OpenWeatherMap)*
 
 ---
 
@@ -34,40 +33,56 @@ The project is designed to provide accurate, real-time weather data with a clean
    git clone https://github.com/your-username/weather_app.git
    ```
 
-2. Navigate to the project folder:
+2. Go to project folder:
 
    ```bash
    cd weather_app
    ```
 
-3. Install dependencies (if needed):
+3. Install dependencies:
 
    ```bash
-   npm install
+   pip install -r requirements.txt
    ```
 
 4. Run the app:
 
    ```bash
-   npm start
+   python main.py
    ```
 
 ---
 
 ## ⚙️ Configuration
 
-* Create an API key from your chosen weather service
-* Add it to your project (e.g. in `.env` file):
+Get your API key from OpenWeatherMap 
+and add it in the app configuration file.
 
-  ```env
-  API_KEY=your_api_key_here
-  ```
+Example:
+
+```env
+API_KEY=your_api_key_here
+```
 
 ---
 
 ## 📸 Screenshots
 
-*(Add screenshots of your app here)*
+![Main Window](media/screenshots/image1.png)
+![Example](media/screenshots/image1.png)
+
+![City search](media/screenshots/image2.png)
+![Example](media/screenshots/image2.png)
+
+![App size](media/screenshots/image3.png)
+![Example](media/screenshots/image3.png)
+
+![App language](media/screenshots/image4.png)
+![Example](media/screenshots/image4.png)
+
+![Image lists](media/screenshots/image5.png)
+![Example](media/screenshots/image5.png)
+
 
 ---
 
@@ -81,21 +96,104 @@ The project is designed to provide accurate, real-time weather data with a clean
 
 ## 📄 License
 
-This project is open-source and available under the MIT License.
+MIT License
+
+# 🌦️ Weather App
+
+## 📌 Опис
+
+**Weather App** — це простий та зручний застосунок для перегляду поточної погоди та прогнозу в будь-якому місті.
+Проєкт надає точні дані в реальному часі з приємним інтерфейсом.
 
 ---
 
-## 💡 Future Improvements
+## 🚀 Можливості
 
-* 🌙 Dark mode
-* 📍 Auto-detect user location
-* 🔔 Weather alerts
-* 📊 More detailed analytics
+* 🌍 Пошук погоди за містом
+* 🌡️ Поточна температура та стан
+* 📅 Прогноз погоди
+* 💨 Вологість, швидкість вітру тощо
+
+---
+
+## 🛠️ Технології
+
+* Python
+* PyQt6
+* Weather API *OpenWeatherMap*
 
 ---
 
-## 🤝 Contributing
+## 📦 Встановлення
 
-Contributions are welcome! Feel free to fork the project and submit a pull request.
+1. Клонуйте репозиторій:
+
+   ```bash
+   git clone https://github.com/your-username/weather_app.git
+   ```
+
+2. Перейдіть у папку проєкту:
+
+   ```bash
+   cd weather_app
+   ```
+
+3. Встановіть залежності:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Запустіть застосунок:
+
+   ```bash
+   python main.py
+   ```
 
 ---
+
+## ⚙️ Налаштування
+
+Отримайте API-ключ у сервісі погоди (наприклад OpenWeatherMap)
+і додайте його у файл конфігурації застосунку.
+
+Приклад:
+
+```env
+API_KEY=your_api_key_here
+```
+
+---
+
+## 📸 Скриншоти
+
+![Головне вікно](media/screenshots/image1.png)
+![Example](media/screenshots/image1.png)
+
+![Пошук міста](media/screenshots/image2.png)
+![Example](media/screenshots/image2.png)
+
+![Розмір додатку](media/screenshots/image3.png)
+![Example](media/screenshots/image3.png)
+
+![Мова додатку](media/screenshots/image4.png)
+![Example](media/screenshots/image4.png)
+
+![Список зображень](media/screenshots/image5.png)
+![Example](media/screenshots/image5.png)
+
+
+
+---
+
+## 👨‍💻 Автори
+
+* Kiril Maltsev
+* Misha Mishenko
+* Misha Morozov
+
+---
+
+## 📄 Ліцензія
+
+MIT License

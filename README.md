@@ -68,20 +68,25 @@ API_KEY=your_api_key_here
 
 ## 📸 Screenshots
 
+## Main Window
+
 ![Main Window](media/screenshots/image1.png)
-![Example](media/screenshots/image1.png)
+
+## City search
 
 ![City search](media/screenshots/image2.png)
-![Example](media/screenshots/image2.png)
+
+## App size
 
 ![App size](media/screenshots/image3.png)
-![Example](media/screenshots/image3.png)
+
+## App language
 
 ![App language](media/screenshots/image4.png)
-![Example](media/screenshots/image4.png)
+
+## Image lists
 
 ![Image lists](media/screenshots/image5.png)
-![Example](media/screenshots/image5.png)
 
 
 ---
@@ -167,20 +172,25 @@ API_KEY=your_api_key_here
 
 ## 📸 Скриншоти
 
+## Головне вікно
+
 ![Головне вікно](media/screenshots/image1.png)
-![Example](media/screenshots/image1.png)
+
+## Пошук міста
 
 ![Пошук міста](media/screenshots/image2.png)
-![Example](media/screenshots/image2.png)
+
+## Розмір додатку
 
 ![Розмір додатку](media/screenshots/image3.png)
-![Example](media/screenshots/image3.png)
+
+## Мова додатку
 
 ![Мова додатку](media/screenshots/image4.png)
-![Example](media/screenshots/image4.png)
+
+## Список зображень
 
 ![Список зображень](media/screenshots/image5.png)
-![Example](media/screenshots/image5.png)
 
 
 
